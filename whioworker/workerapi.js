@@ -230,7 +230,7 @@ function setGrey(shade,alpha) {
 
 var random=Math.random;
 var stringify=JSON.stringify;
-
+var setColor=setColour;
 //TOHERE
 
 var inputManager = (function () {
