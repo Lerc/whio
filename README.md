@@ -7,22 +7,22 @@ The idea behind Whio is to provide an evironment where people leaning to program
 programs that they can easily understand.   
 
 To do this, much of the architecture of DOM based Javascript is hidden.  Programs using whio can just have a single line of
-<code>
+```javascript
   print("hello");
-</code>
+```
 
 Whio provides a great deal of globally scoped functions to enable people to write working programs before they have encountered
 the concepts of Objects and Methods.
 
 A program to continually update the mouse position on the screen can be done with
-<code>
+```javascript
   function update() {
       clear();
       print(getMousePosition());
   }
   
   run(update);
-</code>
+```
 
 Whio includes the [sugarjs](http://sugarjs.com/) library, to make things nicer when the programmer starts to use the methods 
 of implicitly created objects. 
