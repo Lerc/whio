@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>A test page</title>
+    <link rel="stylesheet" type="text/css" href="codemirror.css" />
+    <link rel="stylesheet" type="text/css" href="default.css" />
+    <script type="text/javascript" src="codemirror-compressed.js"></script>
+</head>
+<div>
+<button onclick="execTextBox()">Run</button>
+</div>
+<body style="font-family: sans-serif">
+	<Div id="features"></Div>
+	  <TextArea id="ta" style="height:200px; width:600px;">
+print ("Hi there");
+
+drawLine (0,200,640,300);
+
+drawCircle (200,100,60);
+</TextArea>
+<div>
+<output id="result"></output>
+</div>
+<div>
+<output id="log"></output>
+</div>
+<script src="whio/workerhost.js"></script>
+<script src="whio/hostapi.js"></script>
+
+<script>
+  var textArea=document.getElementById("ta");
+  var log=document.getElementById("log");
+  var editor=CodeMirror.fromTextArea(textArea,{lineNumbers: true})
+
+  var features=document.getElementById('features');
+ 
+  function execTextBox() {
+    RunCodeBox(640,480,editor.getValue());    
+  }
+
+  function stop() {
+    worker.terminate();
+  }
+
+</script>
+
+
+
+</body>
+</html>

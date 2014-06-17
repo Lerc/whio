@@ -1,0 +1,59 @@
+.cm-s-default span.cm-keyword {color: #708;}
+.cm-s-default span.cm-atom {color: #219;}
+.cm-s-default span.cm-number {color: #164;}
+.cm-s-default span.cm-def {color: #00f;}
+.cm-s-default span.cm-variable {color: black;}
+.cm-s-default span.cm-variable-2 {color: #05a;}
+.cm-s-default span.cm-variable-3 {color: #0a5;}
+.cm-s-default span.cm-property {color: black;}
+.cm-s-default span.cm-operator {color: black;}
+.cm-s-default span.cm-comment {color: #a50;}
+.cm-s-default span.cm-string {color: #a11;}
+.cm-s-default span.cm-string-2 {color: #f50;}
+.cm-s-default span.cm-meta {color: #555;}
+.cm-s-default span.cm-error {color: #f00;}
+.cm-s-default span.cm-qualifier {color: #555;}
+.cm-s-default span.cm-builtin {color: #30a;}
+.cm-s-default span.cm-bracket {color: #cc7;}
+.cm-s-default span.cm-tag {color: #170;}
+.cm-s-default span.cm-attribute {color: #00c;}
+
+.codeview>input{
+	display:none;
+}
+
+.codeview.example>input{
+	display:inline-block;
+}
+
+.codeview.example>input {
+	display:none;
+}
+
+.codeview.example>input+label+div{
+	display:block;
+	visibility:hidden;
+	position:absolute;
+}
+
+.codeview.example>input:checked+label+div{
+	visibility:visible;
+	position:inherit;
+}
+
+.codeview.example>input+label:before {
+	content: "Show example";
+	box-shadow: 0px 0px 1px 0px;
+	border-radius: 5px;
+	padding: 1px;
+}
+
+.codeview.example>input+label:hover:before {
+	box-shadow: 0px 0px 2px 1px;
+}
+
+.codeview.example>input:checked+label:before {
+	content: "Hide example";
+}
+ide example";
+}
