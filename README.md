@@ -3,7 +3,7 @@ Whio
 ![](https://raw.github.com/Lerc/whio/master/whio_logo.png)
 A library to provide a gentle introduction to programming.
 
-The idea behind Whio is to provide an evironment where people leaning to program can write short
+The idea behind Whio is to provide an evironment where people learning to program can write short
 programs that they can easily understand.   
 
 To do this, much of the architecture of DOM based Javascript is hidden.  Programs using whio can just have a single line of
@@ -23,6 +23,9 @@ A program to continually update the mouse position on the screen can be done wit
   
   run(update);
 ```
+
+There is a wiki page showing the functions Whio provides at http://fingswotidun.com/code/index.php/API
+
 
 Whio includes the [sugarjs](http://sugarjs.com/) library, to make things nicer when the programmer starts to use the methods 
 of implicitly created objects. 
