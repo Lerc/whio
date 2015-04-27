@@ -5,10 +5,39 @@
     <link rel="stylesheet" type="text/css" href="codemirror.css" />
     <link rel="stylesheet" type="text/css" href="default.css" />
     <script type="text/javascript" src="codemirror-compressed.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
+    
+    <style>
+			.CodeMirror > .panel {
+				position : relative;
+				z-index : 10;
+				background-color: #f0f0f0;
+				height:17px;
+				cursor: default;
+			}
+			.CodeMirror > .panel > .fullscreentoggle {
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				bottom: 0px;
+				background-color: beige;
+			}
+			
+			.CodeMirror > .panel >.button {
+				width: 16px;
+				height: 16px;
+				display: inline-block;
+				text-align: center;
+				box-shadow: inset -1px -1px 0px 0px black, inset 1px 1px 0px 0px white;
+			}
+			.CodeMirror > .panel >.button:hover {
+				background-color: rgba(255,255,255,0.7);				
+			}
+			.CodeMirror > .panel >.button:active {
+				box-shadow: inset -1px -1px 0px 0px white, inset 1px 1px 0px 0px black;
+			}
+    </style>
 </head>
-<div>
-<button onclick="execTextBox()">Run</button>
-</div>
 <body style="font-family: sans-serif">
 	<Div id="features"></Div>
 	  <TextArea id="ta" style="height:200px; width:600px;">
@@ -28,9 +57,106 @@ drawCircle (200,100,60);
 <script src="whio/hostapi.js"></script>
 
 <script>
+
+	var whioGlobals = {
+		log : true,
+		drawImageData : true,
+		print : true,
+		clear : true,
+		setPixel : true,
+		makeBackground : true,
+		setColour : true,
+		drawLine : true,
+		drawCircle : true,
+		fillCircle : true,
+		drawRectangle : true,
+		fillRectangle : true,
+		loadImage : true,
+		drawImage : true,
+		drawImageRect : true,
+		canvasSave : true,
+		canvasRestore : true,
+		canvasTransform : true,
+		canvasTranslate : true,
+		canvasRotate : true,
+		canvasScale : true,
+		drawPolygon : true,
+		fillPolygon : true,
+		distance : true,
+		rgb : true,
+		grey : true,
+		setRgb : true,
+		setGrey : true,
+		random : true,
+		stringify : true,
+		setColor : true,
+		keyIsDown : true,
+		keyWentDown : true,
+		getMousePosition : true,
+		getMouseInfo : true,
+		run : true,
+		setInfo : true,
+		noise2d : true,
+		noise3d : true
+	}
+	 
+	
   var textArea=document.getElementById("ta");
   var log=document.getElementById("log");
-  var editor=CodeMirror.fromTextArea(textArea,{lineNumbers: true})
+  var editor=CodeMirror.fromTextArea(textArea,{
+		lineNumbers: true,
+		foldGutter:true,
+		lint: { options: {undef:true,worker:true,funcscope:true, globals: whioGlobals } },
+		gutters: ["CodeMirror-lint-markers","CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+		extraKeys: {
+      "F11": function(cm) {
+        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+			},
+			"Esc": function(cm) {
+				if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+			},
+			"Ctrl-Space": "autocomplete"
+		 }
+		});
+		
+		
+		
+	var numPanels=0;
+	function makePanel() {
+		var node = document.createElement("div");
+		var widget, close, label;
+
+		node.className = "panel ";
+		close = node.appendChild(document.createElement("a"));
+		close.setAttribute("title", "Toggle FullScreen!");
+		close.setAttribute("class", "fullscreentoggle button");
+		close.textContent = "□";
+		CodeMirror.on(close, "click", function() {
+      editor.setOption("fullScreen", !editor.getOption("fullScreen"));
+		});
+		
+		
+		label = node.appendChild(document.createElement("span"));
+		label.textContent = "|";
+		
+		var run=node.appendChild(document.createElement("a"));
+		run.setAttribute("title", "Run the code");
+		run.setAttribute("class", "button");
+	  run.textContent="►";	
+		CodeMirror.on(run, "click", function() {
+      execTextBox();
+		});
+		
+		var cmWrapper=editor.getWrapperElement();
+  	cmWrapper.insertBefore(node,cmWrapper.firstChild);
+		return node;
+	}
+		
+		
+	var topPanel = makePanel();
+	
+	
+//	editor.addPanel(topPanel, {position:"bottom"});
 
   var features=document.getElementById('features');
  
