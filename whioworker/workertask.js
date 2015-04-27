@@ -78,7 +78,7 @@ self.addEventListener('message', function(e) {
   var data = e.data;
   switch (data.cmd) {
     case 'stop':
-      self.postMessage('WORKER STOPPED: ' + data.msg + '. (buttons will no longer work)');
+      self.postMessage('WORKER STOPPED: ' + data.msg');
       self.close(); // Terminates the worker.
       break;
     case 'exec':

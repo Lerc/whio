@@ -260,6 +260,54 @@ function clear() { currentCanvasHelper.clear() }
 function setColour(colour) { currentCanvasHelper.setColour(colour) }
 function makeBackground() {currentCanvasHelper.makeBackground() }
 
+function drawImageRect(image,sourceLeft,sourceTop,sourceWidth,sourceHeight,destLeft,destTop,destWidth,destHeight) {
+  //unimplememnted yet
+}
+
+function canvasSave() {
+  currentCanvasHelper.ctx.save();
+}
+
+function canvasRestore() {
+  currentCanvasHelper.ctx.restore();
+}
+
+function canvasTransform(a,b,c,d,e,f) {
+  currentCanvasHelper.ctx.transform(a,b,c,d,e,f);
+}
+
+function canvasTranslate(x,y) {
+  currentCanvasHelper.ctx.translate(x,y);
+}
+
+function canvasRotate(angle) {
+  currentCanvasHelper.ctx.rotate(angle);
+}
+
+function canvasScale(scaleX,scaleY) {
+  currentCanvasHelper.ctx.scale(scaleX,scaleY);
+}
+
+function drawPolygon() {
+  var pointData;
+  if (arguments.length == 1) {
+    pointData=arguments[0];
+  } else {
+    pointData = Array.prototype.slice.call(arguments);
+  }
+  //unimplememnted yet
+}
+
+function fillPolygon(pointData) {
+  var pointData;
+  if (arguments.length == 1) {
+    pointData=arguments[0];
+  } else {
+    pointData = Array.prototype.slice.call(arguments);
+  }
+  //unimplememnted yet
+}
+
 function  InputManager() {
   this._keyIsDown = [];
   this._keyWentDown = [];
@@ -404,7 +452,7 @@ function loadImage(url,framesWide,framesHigh) {
   run_imagesPending +=1;
   var result = new Image;
   if (!framesWide) {result.framesWide=1} else {result.framesWide=framesWide}
-  if (!framesHigh) {result.framesHigh=1} else {result.framesWide=framesHigh}
+  if (!framesHigh) {result.framesHigh=1} else {result.framesHigh=framesHigh}
   result.onload = function(e){log(e.target.src +" loaded"); run_imagesPending-=1;}
   result.src=url; 
   return result;
@@ -437,6 +485,10 @@ function FrameTimer(move,draw,framerate) {
     this.draw=draw;
     this.move=move;
     function timerTick() {
+			if (run_imagesPending > 0) {
+				clear();
+				print("Loading "+run_imagesPending+" images");
+			} else {
         var ticks=0;
         var now=new Date();
         var age = now-launch_time;
@@ -444,12 +496,15 @@ function FrameTimer(move,draw,framerate) {
         //while (counter<age_in_ticks) {
             counter++;
             ticks++;
-			if (timer.move) timer.move();
+			  if (timer.move) timer.move();
         //}
         if (ticks>0) {
-          if (timer.draw) timer.draw();
+					canvasSave();
+            if (timer.draw) timer.draw();
+					canvasRestore();
         }
-        document.title=counter;
+			}
+        //document.title=counter;
         requestAnimationFrame(timerTick);
         //var time_of_next_frame=(age_in_ticks+1)*interval;
         //var time_to_do=time_of_next_frame-age;
