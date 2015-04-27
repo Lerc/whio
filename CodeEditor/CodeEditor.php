@@ -38,12 +38,15 @@ function renderCodeEditor( $paramstring, $params = array(), $parser){
     	$wgOut->addStyle( $path . 'editor/codemirror.css', 'screen');
     	$wgOut->addStyle( $path . 'editor/default.css', 'screen');
     	$wgOut->addScriptFile( $path . 'editor/codemirror-compressed.js');
+    	$wgOut->addScriptFile('//ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js');
     	$wgOut->addScriptFile( $path . 'editor/workerhost.js');
     	$wgOut->addScriptFile( $path . 'editor/hostapi.js');
+    	$wgOut->addScriptFile( $path . 'editor/editor.js');
+
 
     	$getElements = 'document.querySelectorAll(".codeview textarea")';
-        $perElement = "function setupEditor(element) {element.value=atob(element.dataset['code']);  var button=document.createElement('button');   button.innerHTML='Run';   element.parentNode.insertBefore(button,element);        var editor = CodeMirror.fromTextArea(element,{lineNumbers: true});        button.addEventListener('click',function (e) {RunCodeBox(640,480,editor.getValue());} );}";
-    	$execScript = "<script type='text/javascript'>(function () {var elements=$getElements; $perElement;   for (var i=0;i<elements.length;i++){var element=elements[i]; setupEditor(element)}     })();</script>";
+      //$perElement = "function setupEditor(element) {element.value=atob(element.dataset['code']);  var button=document.createElement('button');   button.innerHTML='Run';   element.parentNode.insertBefore(button,element);        var editor = CodeMirror.fromTextArea(element,{lineNumbers: true});        button.addEventListener('click',function (e) {RunCodeBox(640,480,editor.getValue());} );}";
+    	$execScript = "<script type='text/javascript'>(function (){var elements=$getElements; for(var i=0;i<elements.length;i++) {var element=elements[i]; element.value=atob(element.dataset['code']); setupEditor(element)}     })();</script>";
     	$wgOut->addScript($execScript);
     }
 

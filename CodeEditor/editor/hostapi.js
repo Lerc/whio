@@ -202,7 +202,7 @@ function whioAPI(worker,canvas) {
 
 function RunCodeBox(width,height,code) {
     var overlay = document.createElement("div");
-    overlay.setAttribute("style","position: fixed; z-index:100; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,0.5)");
+    overlay.setAttribute("style","position: fixed; z-index:500; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,0.5)");
     document.body.appendChild(overlay);
     
     var canvas = document.createElement("canvas");
@@ -334,7 +334,8 @@ function RunCodeBox(width,height,code) {
     }
     
     function handleError(e) {
-      var errorLine=e.lineno-info.evalLine;      
+			console.log(e);
+      var errorLine=e.lineno;      
       logOutput.innerHTML+="Error on line "+errorLine+":  "+e.message+"  <br>";
       logOutput.style.visibility="visible";
       //alert(e.message+"::::"+errorLine);
