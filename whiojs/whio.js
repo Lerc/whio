@@ -152,6 +152,24 @@ CanvasHelper.prototype.fillRectangle = function (x,y,width,height) {
   this.ctx.fill();
 }
 
+CanvasHelper.prototype.drawPolygon = function (pointData) {	
+  this.ctx.beginPath();
+  for(var i=0; i< pointData.length;i+=2) {
+      this.ctx.lineTo(pointData[i],pointData[i+1]);
+  }
+  this.ctx.closePath();
+  this.ctx.stroke();
+}
+
+CanvasHelper.prototype.fillPolygon = function (pointData) {
+  this.ctx.beginPath();
+  for(var i=0; i< pointData.length;i+=2) {
+      this.ctx.lineTo(pointData[i],pointData[i+1]);
+  }
+  this.ctx.closePath();
+  this.ctx.fill();
+}
+
 CanvasHelper.prototype.drawImage = function (image,x,y,frame,angle) {
   if (!frame) frame=0;
   var handlex=0;
@@ -295,7 +313,7 @@ function drawPolygon() {
   } else {
     pointData = Array.prototype.slice.call(arguments);
   }
-  //unimplememnted yet
+  currentCanvasHelper.drawPolygon(pointData);
 }
 
 function fillPolygon(pointData) {
@@ -305,7 +323,7 @@ function fillPolygon(pointData) {
   } else {
     pointData = Array.prototype.slice.call(arguments);
   }
-  //unimplememnted yet
+  currentCanvasHelper.fillPolygon(pointData);
 }
 
 function  InputManager() {
