@@ -1,7 +1,7 @@
 var cx = 320;
 var cy = 240;
 
-function move() {
+function update() {
   //37 is the key code of the left arrow key
   if ( keyIsDown(37) ) {
     cx-=1;
@@ -22,13 +22,10 @@ function move() {
     cy+=1;
   }  
 
-}
-
-function draw() {
    fillCircle(cx,cy,4);
 
-    
 }
 
 
-run(move,draw);
+
+run(update);
