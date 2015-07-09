@@ -10,7 +10,7 @@ var verificationActive = true;
 
 Function.prototype.logArgs = function () {
   console.log("arguments",Function.prototype.logArgs.caller.arguments);
-}
+};
 
 function checkArguments() {
   if (!verificationActive) return;
@@ -61,7 +61,7 @@ function checkArguments() {
 */
 function makeTypeCheck(typeName) {
   return ({
-    "check":function(a) {return typeof a === typeName},
+    "check":function(a) {return typeof a === typeName;},
     "expectationText":"a "+typeName    
   });
 }
@@ -70,7 +70,7 @@ function makeCombiner_or(a,b) {
   return {
     "check":function(c) {return a.check(c) || b.check(c);},
     "expectationText":("either" + a.expectationText+" or "+ b.ExpectationText)
-  }
+  };
 }
 
 var requiredNumber=makeTypeCheck("number");
@@ -80,7 +80,7 @@ var requiredUndefined=makeTypeCheck("undefined");
 var optionalNumber=makeCombiner_or(requiredNumber,requiredUndefined);
 var optionalFunction=makeCombiner_or(requiredFunction,requiredUndefined);
 var optionalString=makeCombiner_or(requiredString,requiredUndefined);
-var acceptsAnything =  {check:function(a){return true},expectationText:"anything at all"};
+var acceptsAnything =  {check:function(a){return true;},expectationText:"anything at all"};
 
 /*
 var NeedsNumber =  {check:function(a){return typeof a === "number"},expectationText:"a number"}
@@ -102,7 +102,7 @@ var defaultCanvasHelper;
 var currentCanvasHelper;
 
 function CanvasHelper (canvas) {
-    this.canvas = canvas
+    this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.width = canvas.width;
     this.height = canvas.height;
@@ -122,7 +122,7 @@ CanvasHelper.prototype.drawLine = function (x1,y1,x2,y2) {
   this.ctx.moveTo(x1,y1);
   this.ctx.lineTo(x2,y2);
   this.ctx.stroke();
-}
+};
 
 CanvasHelper.prototype.drawCircle = function (centerX,centerY,size) {
   if (size<=0) return;  
@@ -130,13 +130,13 @@ CanvasHelper.prototype.drawCircle = function (centerX,centerY,size) {
   this.ctx.arc(centerX,centerY,size/2,0,Math.PI*2,true);
   this.ctx.closePath();
   this.ctx.stroke();
-}
+};
 
 CanvasHelper.prototype.drawRectangle = function (x,y,width,height) {
   this.ctx.beginPath();
   this.ctx.rect(x,y,width,height);
   this.ctx.stroke();
-}
+};
 
 CanvasHelper.prototype.fillCircle = function (centerX,centerY,size) {
   if (size<=0) return;  
@@ -144,13 +144,13 @@ CanvasHelper.prototype.fillCircle = function (centerX,centerY,size) {
   this.ctx.arc(centerX,centerY,size/2,0,Math.PI*2,true);
   this.ctx.closePath();
   this.ctx.fill();
-}
+};
 
 CanvasHelper.prototype.fillRectangle = function (x,y,width,height) {
   this.ctx.beginPath();
   this.ctx.rect(x,y,width,height);
   this.ctx.fill();
-}
+};
 
 CanvasHelper.prototype.drawPolygon = function (pointData) {	
   this.ctx.beginPath();
@@ -159,7 +159,7 @@ CanvasHelper.prototype.drawPolygon = function (pointData) {
   }
   this.ctx.closePath();
   this.ctx.stroke();
-}
+};
 
 CanvasHelper.prototype.fillPolygon = function (pointData) {
   this.ctx.beginPath();
@@ -168,7 +168,7 @@ CanvasHelper.prototype.fillPolygon = function (pointData) {
   }
   this.ctx.closePath();
   this.ctx.fill();
-}
+};
 
 CanvasHelper.prototype.drawImage = function (image,x,y,frame,angle) {
   if (!frame) frame=0;
@@ -192,23 +192,23 @@ CanvasHelper.prototype.drawImage = function (image,x,y,frame,angle) {
   } else {
      this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,x-handlex,y-handley,framewidth,frameheight);
   }
-}
+};
 
 CanvasHelper.prototype.setColour = function (colour) {
     this.ctx.fillStyle=colour;
     this.ctx.strokeStyle=colour;
-}
+};
 
 CanvasHelper.prototype.clear = function () {
   this.ctx.clearRect(0,0,this.width,this.height); 
   this.textX=0;
   this.textY=this.lineSpacing;
   
-}  
+}; 
 
 CanvasHelper.prototype.makeBackground = function() {
     this.canvas.style.backgroundImage="url("+this.canvas.toDataURL("image/png")+")";
-}
+};
 
 CanvasHelper.prototype.print = function(text,x,y) {
     
@@ -218,7 +218,7 @@ CanvasHelper.prototype.print = function(text,x,y) {
    this.ctx.fillText(text,x,y);
    this.textX=x;
    this.textY=y+this.lineSpacing;  
-}
+};
 
 function makeFullPageCanvas() {
     var firstDiv = document.getElementsByTagName('div')[0];
@@ -249,23 +249,22 @@ function makeCanvas(width,height) {
 }
 
 function drawLine(x1,y1,x2,y2) { 
-  //if (verificationActive) checkArguments(arguments,NeedsNumber,NeedsNumber,NeedsNumber,NeedsNumber);
-  currentCanvasHelper.drawLine(x1,y1,x2,y2)
+  currentCanvasHelper.drawLine(x1,y1,x2,y2);
 }
+
 function drawCircle(centerX,centerY,size) { 
-  //if (verificationActive) checkArguments(arguments,NeedsNumber,NeedsNumber,NeedsNumber);
   currentCanvasHelper.drawCircle(centerX,centerY,size);
 }
+
 function drawRectangle(x,y,width,height) { 
-  //if (verificationActive) checkArguments(arguments,NeedsNumber,NeedsNumber,NeedsNumber,NeedsNumber);
   currentCanvasHelper.drawRectangle(x,y,width,height); 
-}  
+}
+
 function fillCircle(centerX,centerY,size) { 
-  //if (verificationActive) checkArguments(arguments,NeedsNumber,NeedsNumber,NeedsNumber);
   currentCanvasHelper.fillCircle(centerX,centerY,size); 
 }
+
 function fillRectangle(x,y,width,height) {
-  //if (verificationActive) checkArguments(arguments,NeedsNumber,NeedsNumber,NeedsNumber,NeedsNumber);
   currentCanvasHelper.fillRectangle(x,y,width,height);
 }
 
@@ -273,10 +272,10 @@ function print(text,x,y) {
   currentCanvasHelper.print(text,x,y);
 }
 
-function drawImage(image,x,y,frame,angle) { currentCanvasHelper.drawImage(image,x,y,frame,angle) }
-function clear() { currentCanvasHelper.clear() }
-function setColour(colour) { currentCanvasHelper.setColour(colour) }
-function makeBackground() {currentCanvasHelper.makeBackground() }
+function drawImage(image,x,y,frame,angle) { currentCanvasHelper.drawImage(image,x,y,frame,angle); }
+function clear() { currentCanvasHelper.clear(); }
+function setColour(colour) { currentCanvasHelper.setColour(colour); }
+function makeBackground() {currentCanvasHelper.makeBackground(); }
 
 function drawImageRect(image,sourceLeft,sourceTop,sourceWidth,sourceHeight,destLeft,destTop,destWidth,destHeight) {
   //unimplememnted yet
@@ -306,7 +305,7 @@ function canvasScale(scaleX,scaleY) {
   currentCanvasHelper.ctx.scale(scaleX,scaleY);
 }
 
-function drawPolygon() {
+function drawPolygon(points) {
   var pointData;
   if (arguments.length == 1) {
     pointData=arguments[0];
@@ -316,7 +315,7 @@ function drawPolygon() {
   currentCanvasHelper.drawPolygon(pointData);
 }
 
-function fillPolygon(pointData) {
+function fillPolygon(points) {
   var pointData;
   if (arguments.length == 1) {
     pointData=arguments[0];
@@ -423,12 +422,12 @@ function  InputManager() {
   }
   
   this.getMouseInfo = function() {
-    return {x:mouseX,y:mouseY,left:this.keyIsDown(133)?true:false,middle:this.keyIsDown(134)?true:false,right:this.keyIsDown(135)?true:false}
-  }
+    return {x:mouseX,y:mouseY,left:this.keyIsDown(133)?true:false,middle:this.keyIsDown(134)?true:false,right:this.keyIsDown(135)?true:false};
+  };
   
   this.getMousePosition = function() {
-    return {x:mouseX,y:mouseY}
-  }
+    return {x:mouseX,y:mouseY};
+  };
   
   addEventListener("keydown",handleKeyDown,true);
   addEventListener("keyup",handleKeyUp,true);
@@ -451,15 +450,15 @@ function  InputManager() {
 InputManager.prototype.cycle = function() {
     this._keyWentDown = this._keyDownAccumulation;
     this._keyDownAccumulation = [];  
-}
+};
 
 InputManager.prototype.keyIsDown = function(keycode) {
     return this._keyIsDown[keycode];
-}
+};
 
 InputManager.prototype.keyWentDown = function (keycode) {
     return this._keyWentDown[keycode];
-}
+};
   
 
 var run_input; 
@@ -468,10 +467,10 @@ var run_imagesPending = 0;
 
 function loadImage(url,framesWide,framesHigh) {
   run_imagesPending +=1;
-  var result = new Image;
-  if (!framesWide) {result.framesWide=1} else {result.framesWide=framesWide}
-  if (!framesHigh) {result.framesHigh=1} else {result.framesHigh=framesHigh}
-  result.onload = function(e){log(e.target.src +" loaded"); run_imagesPending-=1;}
+  var result = new Image();
+  if (!framesWide) {result.framesWide=1;} else {result.framesWide=framesWide;}
+  if (!framesHigh) {result.framesHigh=1;} else {result.framesHigh=framesHigh;}
+  result.onload = function(e){log(e.target.src +" loaded"); run_imagesPending-=1;};
   result.src=url; 
   return result;
 }
@@ -585,9 +584,9 @@ function run(move,draw,framerate) {
      run_input.cycle();
      move();
   }
-  run_timer=new FrameTimer(wrapmove,draw)
+  run_timer=new FrameTimer(wrapmove,draw);
 }
-run.requirements = { arguments : [requiredFunction,requiredFunction,optionalNumber] }
+run.requirements = { arguments : [requiredFunction,requiredFunction,optionalNumber] };
 
 makeCanvas(640,480);
 //end of std whio helper
@@ -597,7 +596,7 @@ function distance(a,b) {
   var dx=a.x-b.x;
   var dy=a.y-b.y;
   var l2 = (dx*dx+dy*dy);
-  if (l2==0) return 0;
+  if (l2===0) return 0;
   return Math.sqrt(l2);
 }
 
@@ -626,7 +625,7 @@ var setColor=setColour;
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
  
-// requestAnimationFrame polyfill by Erik Möller
+// requestAnimationFrame polyfill by Erik Mï¿½ller
 // fixes from Paul Irish and Tino Zijdel
  
 (function() {
@@ -659,7 +658,7 @@ clearTimeout(id);
 //
 // Sean McCullough banksean@gmail.com
 var SimplexNoise = function(r) {
-	if (r == undefined) r = Math;
+	if (r === undefined) r = Math;
   this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0], 
                                  [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1], 
                                  [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]; 
