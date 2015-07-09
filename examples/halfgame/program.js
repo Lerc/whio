@@ -1,12 +1,12 @@
-var player = {x:300,y:400}   // The starting position of the player
+var player = {x:300,y:400};   // The starting position of the player
 
-var alien = {x:200,y:100}    // The starting position of the alien
+var alien = {x:200,y:100};    // The starting position of the alien
 
-var anotherAlien = {x:350, y:100}
+var anotherAlien = {x:350, y:100};
 
 var aliens = [alien,anotherAlien];
 
-var bullet = {x:400, y:200}
+var bullet = {x:400, y:200};
 
 var ship = loadImage('ship_29x64.png',4);
 ship.handleX=14;
@@ -71,7 +71,7 @@ function draw() {
    drawAlienShip(aliens[0]);
    drawAlienShip(aliens[1]);
 
-   drawBullet(bullet.x,bullet.y)
+   drawBullet(bullet.x,bullet.y);
    
    print(distance(alien,bullet));
    
@@ -93,15 +93,15 @@ function moveAlienShip(theAlien) {
 }
 
 function drawAlienShip(theAlien) {
-   setColour("green")
+   setColour("green");
    if (theAlien.dead) {
-     setColour("red")
+     setColour("red");
    }
   fillCircle(theAlien.x,theAlien.y,20);
 }
 
 function drawBullet(x,y) {
-  setColour("orange")
+  setColour("orange");
   fillCircle(x,y,3);
 }
 
