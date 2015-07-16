@@ -1,92 +1,3 @@
-//tiny base
-/*
-function $(id){return document.getElementById(id);}
-function html(id,h){$(id).innerHTML=h;}
-function css(id,s){$(id).style.cssText+=';'+s;}
-*/
-
-//parameter verification functions
-var verificationActive = true;
-
-Function.prototype.logArgs = function () {
-  console.log("arguments",Function.prototype.logArgs.caller.arguments);
-};
-
-function checkArguments() {
-  if (!verificationActive) return;
-  var f = checkArguments.caller;
-  if (!f.requirements) return;
-  f.requirements.arguments.forEach(function(requirement,argumentIndex) {
-    var check = requirement.check(f.arguments[argumentIndex]);
-    if (check === false) {
-      console.log( "function "+ f.name+" failed check for parameter "+argumentIndex+".  Expected "+requirement.expectationText);
-    }
-      
-    //console.log("Argument " + argumentIndex+ " "+(check?"passed":"failed"));
-  });
-}
-/*
-function checkArguments() {
-  var args=arguments[0];
-  var i=1;
-  var result=false;
-  var failure='';
-  while (i<arguments.length) {
-    var verifier=arguments[i];
-    var arg=args[i-1];
-    if ( ! verifier.check(arg) ) {
-      //parameter i failed check.
-      result=true;
-      if (arg === undefined) {
-        failure+="parameter "+i+" is missing.    " 
-      }
-      else {
-        failure+="parameter #"+i+" failed check.  Expected "+verifier.expectationText+"\n"; 
-      }
-    }
-    i++;    
-  }
-  if (result) {
-    verificationActive=false;
-    var functiontext = checkArguments.caller.name+"("
-    for (i=0;i<args.length;i++) {
-      functiontext+=args[i]
-      functiontext+=(i<args.length-1)?",":")";
-    }    
-    failure=functiontext+"\n"+failure;
-    failure+=typeof args[1]  === "number";
-    alert(failure);
-  }
-}
-*/
-function makeTypeCheck(typeName) {
-  return ({
-    "check":function(a) {return typeof a === typeName;},
-    "expectationText":"a "+typeName    
-  });
-}
-
-function makeCombiner_or(a,b) {
-  return {
-    "check":function(c) {return a.check(c) || b.check(c);},
-    "expectationText":("either" + a.expectationText+" or "+ b.ExpectationText)
-  };
-}
-
-var requiredNumber=makeTypeCheck("number");
-var requiredFunction=makeTypeCheck("function");
-var requiredString=makeTypeCheck("string");
-var requiredUndefined=makeTypeCheck("undefined");
-var optionalNumber=makeCombiner_or(requiredNumber,requiredUndefined);
-var optionalFunction=makeCombiner_or(requiredFunction,requiredUndefined);
-var optionalString=makeCombiner_or(requiredString,requiredUndefined);
-var acceptsAnything =  {check:function(a){return true;},expectationText:"anything at all"};
-
-/*
-var NeedsNumber =  {check:function(a){return typeof a === "number"},expectationText:"a number"}
-var NeedsString =  {check:function(a){return typeof a === "string"},expectationText:"some text"}
-*/
-
 function log(s) {
   logelement = document.querySelector("#log");
   if (logelement) {
@@ -576,8 +487,6 @@ function handleKeyUp(e) {
 }
 */
 function run(move,draw,framerate) {
-  checkArguments();
-  
   run_input = new InputManager();
   console.log("running");
   function wrapmove() {
@@ -586,7 +495,6 @@ function run(move,draw,framerate) {
   }
   run_timer=new FrameTimer(wrapmove,draw);
 }
-run.requirements = { arguments : [requiredFunction,requiredFunction,optionalNumber] };
 
 makeCanvas(640,480);
 //end of std whio helper
