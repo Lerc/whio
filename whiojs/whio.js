@@ -238,7 +238,7 @@ function makeCanvas(width,height) {
     var firstDiv = document.getElementsByTagName('div')[0];
     if (!firstDiv) {
       firstDiv=document.createElement("div");
-      document.body.appendNode(firstDiv);
+      document.body.appendChild(firstDiv);
     }  
     firstDiv.innerHTML='<div style="Text-Align:center"> <canvas id=maincanvas></canvas> </div>';
     var canvas = document.querySelector("#maincanvas");
