@@ -1,749 +1,718 @@
-function log(s) {
-  logelement = document.querySelector("#log");
-  if (logelement) {
-    logelement.innerHTML+=s+"<br>";
-  } else {
-    if (console) {
-      console.log(s);
-    }
-  }
-  
-}
-var defaultCanvasHelper;
-var currentCanvasHelper;
-
-function CanvasHelper (canvas) {
-    this.canvas = canvas;
-    this.ctx = canvas.getContext("2d");
-    this.width = canvas.width;
-    this.height = canvas.height;
-    this.textX=0;
-    this.textY=20;
-    this.ctx.font="20px sans-serif";
-    this.lineSpacing=23;
-    
-    if (! defaultCanvasHelper ) {
-      defaulCanvasHelper=this;
-    }
-    currentCanvasHelper=this;
-}
-
-CanvasHelper.prototype.drawLine = function (x1,y1,x2,y2) {
-  this.ctx.beginPath();
-  this.ctx.moveTo(x1,y1);
-  this.ctx.lineTo(x2,y2);
-  this.ctx.stroke();
-};
-
-CanvasHelper.prototype.drawCircle = function (centerX,centerY,size) {
-  if (size<=0) return;  
-  this.ctx.beginPath();
-  this.ctx.arc(centerX,centerY,size/2,0,Math.PI*2,true);
-  this.ctx.closePath();
-  this.ctx.stroke();
-};
-
-CanvasHelper.prototype.drawRectangle = function (x,y,width,height) {
-  this.ctx.beginPath();
-  this.ctx.rect(x,y,width,height);
-  this.ctx.stroke();
-};
-
-CanvasHelper.prototype.fillCircle = function (centerX,centerY,size) {
-  if (size<=0) return;  
-  this.ctx.beginPath();
-  this.ctx.arc(centerX,centerY,size/2,0,Math.PI*2,true);
-  this.ctx.closePath();
-  this.ctx.fill();
-};
-
-CanvasHelper.prototype.fillRectangle = function (x,y,width,height) {
-  this.ctx.beginPath();
-  this.ctx.rect(x,y,width,height);
-  this.ctx.fill();
-};
-
-CanvasHelper.prototype.drawPolygon = function (pointData) {	
-  this.ctx.beginPath();
-  for(var i=0; i< pointData.length;i+=2) {
-      this.ctx.lineTo(pointData[i],pointData[i+1]);
-  }
-  this.ctx.closePath();
-  this.ctx.stroke();
-};
-
-CanvasHelper.prototype.fillPolygon = function (pointData) {
-  this.ctx.beginPath();
-  for(var i=0; i< pointData.length;i+=2) {
-      this.ctx.lineTo(pointData[i],pointData[i+1]);
-  }
-  this.ctx.closePath();
-  this.ctx.fill();
-};
-
-CanvasHelper.prototype.drawImage = function (image,x,y,frame,angle) {
-  if (!frame) frame=0;
-  var handlex=0;
-  var handley=0;
-  if (image.handleX) handlex=image.handleX;
-  if (image.handleY) handley=image.handleY;
-  
-  var ox=frame % image.framesWide;
-  var oy=Math.floor(frame / image.framesWide) % image.framesHigh;
-  var framewidth = Math.floor(image.width / image.framesWide);
-  var frameheight = Math.floor(image.height / image.framesHigh);
-  
-  if (angle) {
-     this.ctx.save();
-     this.ctx.translate((x),(y));
-     this.ctx.rotate(angle);
-     this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,-handlex,-handley,framewidth,frameheight);
-
-     this.ctx.restore();
-  } else {
-     this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,x-handlex,y-handley,framewidth,frameheight);
-  }
-};
-
-CanvasHelper.prototype.setColour = function (colour) {
-    this.ctx.fillStyle=colour;
-    this.ctx.strokeStyle=colour;
-};
-
-CanvasHelper.prototype.clear = function () {
-  this.ctx.clearRect(0,0,this.width,this.height); 
-  this.textX=0;
-  this.textY=this.lineSpacing;
-  
-}; 
-
-CanvasHelper.prototype.makeBackground = function() {
-    this.canvas.style.backgroundImage="url("+this.canvas.toDataURL("image/png")+")";
-};
-
-CanvasHelper.prototype.print = function(text,x,y) {
-    
-   if (!Object.isNumber(x)) x=this.textX;
-   if (!Object.isNumber(y)) y=this.textY;
-   if (Object.isObject(text)) text= JSON.stringify(text);   
-   this.ctx.fillText(text,x,y);
-   this.textX=x;
-   this.textY=y+this.lineSpacing;  
-};
-
-function makeFullPageCanvas() {
-    var firstDiv = document.getElementsByTagName('div')[0];
-    if (!firstDiv) {
-      firstDiv=document.createElement("div");
-      document.body.appendNode(firstDiv);
-    }  
-    body.innerHTML='<canvas id=fullpagecanvas STYLE="position: absolute; top: 0; left:0;"></canvas>';
-    var canvas = document.querySelector("#fullpagecanvas");
-    canvas.width = self.innerWidth;
-    canvas.height = self.innerHeight;
-    var helper = new CanvasHelper(canvas);
-    canvas.style.backgroundColor="#efe";
-}
-
-function makeCanvas(width,height) {
-    var firstDiv = document.getElementsByTagName('div')[0];
-    if (!firstDiv) {
-      firstDiv=document.createElement("div");
-      document.body.appendChild(firstDiv);
-    }  
-    firstDiv.innerHTML='<div style="Text-Align:center"> <canvas id=maincanvas></canvas> </div>';
-    var canvas = document.querySelector("#maincanvas");
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.backgroundColor="#efe";
-    var helper = new CanvasHelper(canvas);
-}
-
-function drawLine(x1,y1,x2,y2) { 
-  currentCanvasHelper.drawLine(x1,y1,x2,y2);
-}
-
-function drawCircle(centerX,centerY,size) { 
-  currentCanvasHelper.drawCircle(centerX,centerY,size);
-}
-
-function drawRectangle(x,y,width,height) { 
-  currentCanvasHelper.drawRectangle(x,y,width,height); 
-}
-
-function fillCircle(centerX,centerY,size) { 
-  currentCanvasHelper.fillCircle(centerX,centerY,size); 
-}
-
-function fillRectangle(x,y,width,height) {
-  currentCanvasHelper.fillRectangle(x,y,width,height);
-}
-
-function print(text,x,y) {
-  currentCanvasHelper.print(text,x,y);
-}
-
-function drawImage(image,x,y,frame,angle) { currentCanvasHelper.drawImage(image,x,y,frame,angle); }
-function clear() { currentCanvasHelper.clear(); }
-function setColour(colour) { currentCanvasHelper.setColour(colour); }
-function makeBackground() {currentCanvasHelper.makeBackground(); }
-
-function drawImageRect(image,sourceLeft,sourceTop,sourceWidth,sourceHeight,destLeft,destTop,destWidth,destHeight) {
-  //unimplememnted yet
-}
-
-function canvasSave() {
-  currentCanvasHelper.ctx.save();
-}
-
-function canvasRestore() {
-  currentCanvasHelper.ctx.restore();
-}
-
-function canvasTransform(a,b,c,d,e,f) {
-  currentCanvasHelper.ctx.transform(a,b,c,d,e,f);
-}
-
-function canvasTranslate(x,y) {
-  currentCanvasHelper.ctx.translate(x,y);
-}
-
-function canvasRotate(angle) {
-  currentCanvasHelper.ctx.rotate(angle);
-}
-
-function canvasScale(scaleX,scaleY) {
-  currentCanvasHelper.ctx.scale(scaleX,scaleY);
-}
-
-function drawPolygon(points) {
-  var pointData;
-  if (arguments.length == 1) {
-    pointData=arguments[0];
-  } else {
-    pointData = Array.prototype.slice.call(arguments);
-  }
-  currentCanvasHelper.drawPolygon(pointData);
-}
-
-function fillPolygon(points) {
-  var pointData;
-  if (arguments.length == 1) {
-    pointData=arguments[0];
-  } else {
-    pointData = Array.prototype.slice.call(arguments);
-  }
-  currentCanvasHelper.fillPolygon(pointData);
-}
-
-function  InputManager() {
-  this._keyIsDown = [];
-  this._keyWentDown = [];
-  this._keyDownAccumulation = [];  
-  var self = this;
-  var mouseX=0;
-  var mouseY=0;
-  
-  function doKeyDown(keyCode) {
-    if (!self._keyIsDown[keyCode]) {
-        self._keyDownAccumulation[keyCode]=true;
-        self._keyIsDown[keyCode]=true;
-    }  
-  }
-  
-  function doKeyUp(keyCode) {
-      self._keyIsDown[keyCode]=false;
-  }
-  
-  function handleKeyDown(e) {
-    //document.title=e.keyCode;
-    doKeyDown(e.keyCode);
-    if ( !((e.altKey) | (e.ctrlKey)) ) {
-        if (e.preventDefault) e.preventDefault();
-    }
-  }  
-
-  function handleKeyUp(e) {
-    doKeyUp(e.keyCode);    
-  }
-  
-  function handleTouchStart(e) {
-    var touches=e.touches;
-    var i;
-    for (i=0;i<touches.length;i++) {
-      var t=touches[i];
-      mouseX=t.pageX;
-      mouseY=t.pageY;
-    }
-     
-  }
-
-  function handleTouchEnd(e) {
-    var touches=e.touches;
-    var i;
-    for (i=0;i<touches.length;i++) {
-      var t=touches[i];
-      mouseX=t.pageX;
-      mouseY=t.pageY;
-    }
-  }
-
-  function handleTouchMove(e) {
-    var touches=e.touches;
-    var i;
-    for (i=0;i<touches.length;i++) {
-      var t=touches[i];
-      mouseX=t.pageX;
-      mouseY=t.pageY;      
-    }
-    
-    
-  }
-
-  function handleGestureChange(e) {
-  
-  }
-  
-  function handleMouseClick() {
-     if ( !((e.altKey) | (e.ctrlKey)) ) {
-        if (e.preventDefault) e.preventDefault();
-    }  
-  }
-  
-  function handleMouseMove(e) {
-     var r=e.currentTarget.getBoundingClientRect();
-     mouseX=Math.floor(e.clientX-r.left);
-     mouseY=Math.floor(e.clientY-r.top);
-  }
-  
-  function handleMouseUp(e) {
-     doKeyUp(133+e.button);  
-     if ( !((e.altKey) | (e.ctrlKey)) ) {
-        if (e.preventDefault) e.preventDefault();
-    }
-  }
-  
-  function handleMouseDown(e) {
-     if (!document.hasFocus()) return;
-     doKeyDown(133+e.button);
-     if ( !((e.altKey) | (e.ctrlKey)) ) {
-        if (e.preventDefault) e.preventDefault();
-    }
-
-  }
-  
-  this.getMouseInfo = function() {
-    return {x:mouseX,y:mouseY,left:this.keyIsDown(133)?true:false,middle:this.keyIsDown(134)?true:false,right:this.keyIsDown(135)?true:false};
-  };
-  
-  this.getMousePosition = function() {
-    return {x:mouseX,y:mouseY};
-  };
-  
-  addEventListener("keydown",handleKeyDown,true);
-  addEventListener("keyup",handleKeyUp,true);
-  
-  addEventListener("gesturechange", handleGestureChange, false);    
-  addEventListener("touchmove", handleTouchMove, false); 
-  addEventListener("touchstart", handleTouchStart, false);
-  addEventListener("touchend", handleTouchEnd, false);
-  
-  var canvasElement=currentCanvasHelper.canvas;
-
-  canvasElement.addEventListener("mousemove",handleMouseMove,false);
-  canvasElement.addEventListener("mouseup",handleMouseUp,true);
-  canvasElement.addEventListener("mousedown",handleMouseDown,true);
-  canvasElement.addEventListener("mouseclick",handleMouseClick,true);
-  
-  canvasElement.addEventListener("contextmenu",function(e){if (e.preventDefault) e.preventDefault();return false;},true);
-}
-
-InputManager.prototype.cycle = function() {
-    this._keyWentDown = this._keyDownAccumulation;
-    this._keyDownAccumulation = [];  
-};
-
-InputManager.prototype.keyIsDown = function(keycode) {
-    return this._keyIsDown[keycode];
-};
-
-InputManager.prototype.keyWentDown = function (keycode) {
-    return this._keyWentDown[keycode];
-};
-  
-
-var run_input; 
-var run_timer;
-var run_imagesPending = 0;
-
-function loadImage(url,framesWide,framesHigh) {
-  run_imagesPending +=1;
-  var result = new Image();
-  if (!framesWide) {result.framesWide=1;} else {result.framesWide=framesWide;}
-  if (!framesHigh) {result.framesHigh=1;} else {result.framesHigh=framesHigh;}
-  result.onload = function(e){log(e.target.src +" loaded"); run_imagesPending-=1;};
-  result.src=url; 
-  return result;
-}
-
-function keyIsDown(keycode) {
-  return run_input.keyIsDown(keycode);
-}
-
-function keyWentDown(keycode) {
-  return run_input.keyWentDown(keycode);
-}
-
-function getMouseInfo() {
-  return run_input.getMouseInfo();
-}
-
-function getMousePosition() {
-  return run_input.getMousePosition();
-}
-
-function FrameTimer(move,draw,framerate) {
-    if (!framerate) framerate=60;
-    var frame_rate=framerate;
-    var interval=1000.0/frame_rate;
-    var launch_time=new Date();
-    var age_in_ticks=0;
-    var counter=0;
-    var timer=this;
-    this.draw=draw;
-    this.move=move;
-    function timerTick() {
-			if (run_imagesPending > 0) {
-				clear();
-				print("Loading "+run_imagesPending+" images");
-			} else {
-        var ticks=0;
-        var now=new Date();
-        var age = now-launch_time;
-        age_in_ticks= Math.floor(age/interval);
-        //while (counter<age_in_ticks) {
-            counter++;
-            ticks++;
-			  if (timer.move) timer.move();
-        //}
-        if (ticks>0) {
-					canvasSave();
-            if (timer.draw) timer.draw();
-					canvasRestore();
-        }
+var Whio = (function(){
+	var API = {};
+	
+	function log(s) {
+		logelement = document.querySelector("#log");
+		if (logelement) {
+			logelement.innerHTML+=s+"<br>";
+		} else {
+			if (console) {
+				console.log(s);
 			}
-        //document.title=counter;
-        requestAnimationFrame(timerTick);
-        //var time_of_next_frame=(age_in_ticks+1)*interval;
-        //var time_to_do=time_of_next_frame-age;
-        //var this_interval=Math.floor(time_to_do);
-        //setTimeout(timerTick,this_interval);
-    }   
-    timerTick();
-    }
+		}  
+	}
+	
+	function makeGlobal() {
+		for (var i=0; i<arguments.length; i++) {
+			var fun = arguments[i];
+			window[fun.name]=fun;
+		}
+	}
+	
+	var defaultCanvasHelper;
+	var currentCanvasHelper;
+
+	function CanvasHelper (canvas) {
+			this.canvas = canvas;
+			this.ctx = canvas.getContext("2d");
+			this.width = canvas.width;
+			this.height = canvas.height;
+			this.textX=0;
+			this.textY=20;
+			this.ctx.font="20px sans-serif";
+			this.lineSpacing=23;
+			
+			if (! defaultCanvasHelper ) {
+				defaulCanvasHelper=this;
+			}
+			currentCanvasHelper=this;
+	}
+
+	CanvasHelper.prototype.drawLine = function (x1,y1,x2,y2) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(x1,y1);
+		this.ctx.lineTo(x2,y2);
+		this.ctx.stroke();
+	};
+
+	CanvasHelper.prototype.drawCircle = function (centerX,centerY,size) {
+		if (size<=0) return;  
+		this.ctx.beginPath();
+		this.ctx.arc(centerX,centerY,size/2,0,Math.PI*2,true);
+		this.ctx.closePath();
+		this.ctx.stroke();
+	};
+
+	CanvasHelper.prototype.drawRectangle = function (x,y,width,height) {
+		this.ctx.beginPath();
+		this.ctx.rect(x,y,width,height);
+		this.ctx.stroke();
+	};
+
+	CanvasHelper.prototype.fillCircle = function (centerX,centerY,size) {
+		if (size<=0) return;  
+		this.ctx.beginPath();
+		this.ctx.arc(centerX,centerY,size/2,0,Math.PI*2,true);
+		this.ctx.closePath();
+		this.ctx.fill();
+	};
+
+	CanvasHelper.prototype.fillRectangle = function (x,y,width,height) {
+		this.ctx.beginPath();
+		this.ctx.rect(x,y,width,height);
+		this.ctx.fill();
+	};
+
+	CanvasHelper.prototype.drawPolygon = function (pointData) {	
+		this.ctx.beginPath();
+		for(var i=0; i< pointData.length;i+=2) {
+				this.ctx.lineTo(pointData[i],pointData[i+1]);
+		}
+		this.ctx.closePath();
+		this.ctx.stroke();
+	};
+
+	CanvasHelper.prototype.fillPolygon = function (pointData) {
+		this.ctx.beginPath();
+		for(var i=0; i< pointData.length;i+=2) {
+				this.ctx.lineTo(pointData[i],pointData[i+1]);
+		}
+		this.ctx.closePath();
+		this.ctx.fill();
+	};
+
+	CanvasHelper.prototype.drawImage = function (image,x,y,frame,angle) {
+		if (!frame) frame=0;
+		var handlex=0;
+		var handley=0;
+		if (image.handleX) handlex=image.handleX;
+		if (image.handleY) handley=image.handleY;
+		
+		var ox=frame % image.framesWide;
+		var oy=Math.floor(frame / image.framesWide) % image.framesHigh;
+		var framewidth = Math.floor(image.width / image.framesWide);
+		var frameheight = Math.floor(image.height / image.framesHigh);
+		
+		if (angle) {
+			 this.ctx.save();
+			 this.ctx.translate((x),(y));
+			 this.ctx.rotate(angle);
+			 this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,-handlex,-handley,framewidth,frameheight);
+
+			 this.ctx.restore();
+		} else {
+			 this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,x-handlex,y-handley,framewidth,frameheight);
+		}
+	};
+
+	CanvasHelper.prototype.setColour = function (colour) {
+			this.ctx.fillStyle=colour;
+			this.ctx.strokeStyle=colour;
+	};
+
+	CanvasHelper.prototype.clear = function () {
+		this.ctx.clearRect(0,0,this.width,this.height); 
+		this.textX=0;
+		this.textY=this.lineSpacing;
+		
+	}; 
+
+	CanvasHelper.prototype.makeBackground = function() {
+			this.canvas.style.backgroundImage="url("+this.canvas.toDataURL("image/png")+")";
+	};
+
+	CanvasHelper.prototype.print = function(text,x,y) {
+			
+		 if (!Object.isNumber(x)) x=this.textX;
+		 if (!Object.isNumber(y)) y=this.textY;
+		 if (Object.isObject(text)) text= JSON.stringify(text);   
+		 this.ctx.fillText(text,x,y);
+		 this.textX=x;
+		 this.textY=y+this.lineSpacing;  
+	};
+
+	function makeFullPageCanvas() {
+			var firstDiv = document.getElementsByTagName('div')[0];
+			if (!firstDiv) {
+				firstDiv=document.createElement("div");
+				document.body.appendNode(firstDiv);
+			}  
+			body.innerHTML='<canvas id=fullpagecanvas STYLE="position: absolute; top: 0; left:0;"></canvas>';
+			var canvas = document.querySelector("#fullpagecanvas");
+			canvas.width = self.innerWidth;
+			canvas.height = self.innerHeight;
+			var helper = new CanvasHelper(canvas);
+			canvas.style.backgroundColor="#efe";
+	}
+
+	function makeCanvas(width,height) {
+			var firstDiv = document.getElementsByTagName('div')[0];
+			if (!firstDiv) {
+				firstDiv=document.createElement("div");
+				document.body.appendChild(firstDiv);
+			}  
+			firstDiv.innerHTML='<div style="Text-Align:center"> <canvas id=maincanvas></canvas> </div>';
+			var canvas = document.querySelector("#maincanvas");
+			canvas.width = width;
+			canvas.height = height;
+			canvas.style.backgroundColor="#efe";
+			var helper = new CanvasHelper(canvas);
+	}
+
+	function drawLine(x1,y1,x2,y2) { 
+		currentCanvasHelper.drawLine(x1,y1,x2,y2);
+	}
+
+	function drawCircle(centerX,centerY,size) { 
+		currentCanvasHelper.drawCircle(centerX,centerY,size);
+	}
+
+	function drawRectangle(x,y,width,height) { 
+		currentCanvasHelper.drawRectangle(x,y,width,height); 
+	}
+
+	function fillCircle(centerX,centerY,size) { 
+		currentCanvasHelper.fillCircle(centerX,centerY,size); 
+	}
+
+	function fillRectangle(x,y,width,height) {
+		currentCanvasHelper.fillRectangle(x,y,width,height);
+	}
+
+	function print(text,x,y) {
+		currentCanvasHelper.print(text,x,y);
+	}
+
+	function drawImage(image,x,y,frame,angle) { currentCanvasHelper.drawImage(image,x,y,frame,angle); }
+	function clear() { currentCanvasHelper.clear(); }
+	function setColour(colour) { currentCanvasHelper.setColour(colour); }
+	function makeBackground() {currentCanvasHelper.makeBackground(); }
+
+	function drawImageRect(image,sourceLeft,sourceTop,sourceWidth,sourceHeight,destLeft,destTop,destWidth,destHeight) {
+		//unimplememnted yet
+	}
+
+	function canvasSave() {
+		currentCanvasHelper.ctx.save();
+	}
+
+	function canvasRestore() {
+		currentCanvasHelper.ctx.restore();
+	}
+
+	function canvasTransform(a,b,c,d,e,f) {
+		currentCanvasHelper.ctx.transform(a,b,c,d,e,f);
+	}
+
+	function canvasTranslate(x,y) {
+		currentCanvasHelper.ctx.translate(x,y);
+	}
+
+	function canvasRotate(angle) {
+		currentCanvasHelper.ctx.rotate(angle);
+	}
+
+	function canvasScale(scaleX,scaleY) {
+		currentCanvasHelper.ctx.scale(scaleX,scaleY);
+	}
+
+	function drawPolygon(points) {
+		var pointData;
+		if (arguments.length == 1) {
+			pointData=arguments[0];
+		} else {
+			pointData = Array.prototype.slice.call(arguments);
+		}
+		currentCanvasHelper.drawPolygon(pointData);
+	}
+
+	function fillPolygon(points) {
+		var pointData;
+		if (arguments.length == 1) {
+			pointData=arguments[0];
+		} else {
+			pointData = Array.prototype.slice.call(arguments);
+		}
+		currentCanvasHelper.fillPolygon(pointData);
+	}
+
+	function  InputManager() {
+		this._keyIsDown = [];
+		this._keyWentDown = [];
+		this._keyDownAccumulation = [];  
+		var self = this;
+		var mouseX=0;
+		var mouseY=0;
+		
+		function doKeyDown(keyCode) {
+			if (!self._keyIsDown[keyCode]) {
+					self._keyDownAccumulation[keyCode]=true;
+					self._keyIsDown[keyCode]=true;
+			}  
+		}
+		
+		function doKeyUp(keyCode) {
+				self._keyIsDown[keyCode]=false;
+		}
+		
+		function handleKeyDown(e) {
+			doKeyDown(e.keyCode);
+			if ( !((e.altKey) | (e.ctrlKey)) ) {
+					if (e.preventDefault) e.preventDefault();
+			}
+		}  
+
+		function handleKeyUp(e) {
+			doKeyUp(e.keyCode);    
+		}
+		
+		function handleTouchStart(e) {
+			var touches=e.touches;
+			var i;
+			for (i=0;i<touches.length;i++) {
+				var t=touches[i];
+				mouseX=t.pageX;
+				mouseY=t.pageY;
+			}
+			 
+		}
+
+		function handleTouchEnd(e) {
+			var touches=e.touches;
+			var i;
+			for (i=0;i<touches.length;i++) {
+				var t=touches[i];
+				mouseX=t.pageX;
+				mouseY=t.pageY;
+			}
+		}
+
+		function handleTouchMove(e) {
+			var touches=e.touches;
+			var i;
+			for (i=0;i<touches.length;i++) {
+				var t=touches[i];
+				mouseX=t.pageX;
+				mouseY=t.pageY;      
+			}
+			
+			
+		}
+
+		function handleGestureChange(e) {
+		
+		}
+		
+		function handleMouseClick() {
+			 if ( !((e.altKey) | (e.ctrlKey)) ) {
+					if (e.preventDefault) e.preventDefault();
+			}  
+		}
+		
+		function handleMouseMove(e) {
+			 var r=e.currentTarget.getBoundingClientRect();
+			 mouseX=Math.floor(e.clientX-r.left);
+			 mouseY=Math.floor(e.clientY-r.top);
+		}
+		
+		function handleMouseUp(e) {
+			 doKeyUp(133+e.button);  
+			 if ( !((e.altKey) | (e.ctrlKey)) ) {
+					if (e.preventDefault) e.preventDefault();
+			}
+		}
+		
+		function handleMouseDown(e) {
+			 if (!document.hasFocus()) return;
+			 doKeyDown(133+e.button);
+			 if ( !((e.altKey) | (e.ctrlKey)) ) {
+					if (e.preventDefault) e.preventDefault();
+			}
+
+		}
+		
+		this.getMouseInfo = function() {
+			return {x:mouseX,y:mouseY,left:this.keyIsDown(133)?true:false,middle:this.keyIsDown(134)?true:false,right:this.keyIsDown(135)?true:false};
+		};
+		
+		this.getMousePosition = function() {
+			return {x:mouseX,y:mouseY};
+		};
+		
+		addEventListener("keydown",handleKeyDown,true);
+		addEventListener("keyup",handleKeyUp,true);
+		
+		addEventListener("gesturechange", handleGestureChange, false);    
+		addEventListener("touchmove", handleTouchMove, false); 
+		addEventListener("touchstart", handleTouchStart, false);
+		addEventListener("touchend", handleTouchEnd, false);
+		
+		var canvasElement=currentCanvasHelper.canvas;
+
+		canvasElement.addEventListener("mousemove",handleMouseMove,false);
+		canvasElement.addEventListener("mouseup",handleMouseUp,true);
+		canvasElement.addEventListener("mousedown",handleMouseDown,true);
+		canvasElement.addEventListener("mouseclick",handleMouseClick,true);
+		
+		canvasElement.addEventListener("contextmenu",function(e){if (e.preventDefault) e.preventDefault();return false;},true);
+	}
+
+	InputManager.prototype.cycle = function() {
+			this._keyWentDown = this._keyDownAccumulation;
+			this._keyDownAccumulation = [];  
+	};
+
+	InputManager.prototype.keyIsDown = function(keycode) {
+			return this._keyIsDown[keycode];
+	};
+
+	InputManager.prototype.keyWentDown = function (keycode) {
+			return this._keyWentDown[keycode];
+	};
+		
+	var run_input; 
+	var run_timer;
+	var run_imagesPending = 0;
+
+	function loadImage(url,framesWide,framesHigh) {
+		run_imagesPending +=1;
+		var result = new Image();
+		if (!framesWide) {result.framesWide=1;} else {result.framesWide=framesWide;}
+		if (!framesHigh) {result.framesHigh=1;} else {result.framesHigh=framesHigh;}
+		result.onload = function(e){log(e.target.src +" loaded"); run_imagesPending-=1;};
+		result.src=url; 
+		return result;
+	}
+
+	function keyIsDown(keycode) {
+		return run_input.keyIsDown(keycode);
+	}
+
+	function keyWentDown(keycode) {
+		return run_input.keyWentDown(keycode);
+	}
+
+	function getMouseInfo() {
+		return run_input.getMouseInfo();
+	}
+
+	function getMousePosition() {
+		return run_input.getMousePosition();
+	}
+
+	function FrameTimer(move,draw,framerate) {
+			if (!framerate) framerate=60;
+			var frame_rate=framerate;
+			var interval=1000.0/frame_rate;
+			var launch_time=new Date();
+			var age_in_ticks=0;
+			var counter=0;
+			var timer=this;
+			this.draw=draw;
+			this.move=move;
+			function timerTick() {
+				if (run_imagesPending > 0) {
+					clear();
+					print("Loading "+run_imagesPending+" images");
+				} else {
+					var ticks=0;
+					var now=new Date();
+					var age = now-launch_time;
+					age_in_ticks= Math.floor(age/interval);
+					//while (counter<age_in_ticks) {
+							counter++;
+							ticks++;
+					if (timer.move) timer.move();
+					//}
+					if (ticks>0) {
+						canvasSave();
+							if (timer.draw) timer.draw();
+						canvasRestore();
+					}
+				}
+					requestAnimationFrame(timerTick);
+			}   
+			timerTick();
+			}
 
 
-/*
-var run_timeStep = 20;
-var run_launchTime = new Date();
-var run_currentTime = 0;
+	function run(move,draw,framerate) {
+		run_input = new InputManager();
+		console.log("running");
+		function wrapmove() {
+			 run_input.cycle();
+			 move();
+		}
+		run_timer=new FrameTimer(wrapmove,draw);
+	}
 
-function timerHandler() {
-
-  setTimeout('timerHandler();', run_timeStep);
-  if (run_imagesPending > 0) return; 
-  var now = new Date();
-  var age = now-run_launchTime;
-  
-  var ticks = (age-run_currentTime) / run_timeStep;
-  if (ticks > 5) {
-    ticks=5;
-    run_currentTime=age;
-  }
-  while (ticks>=1) {
-    //log("ticks = "+ticks);   
-    run_currentTime+=run_timeStep;
-    ticks-=1;
-    run_input.cycle();
-    run_Move();
-  }
-  currentCanvasHelper.ctx.save();
-  run_Draw();
-  currentCanvasHelper.ctx.restore();
-  
-}
-
-function handleKeyDown(e) {
-  run_input.handleKeyDown(e.keyCode);
-  if ( !((e.altKey) | (e.ctrlKey)) ) {
-    if (e.preventDefault) e.preventDefault();
-  }
-  
-  //document.getElementsByTagName('div')[0].innerHTML+="<br>"+e.keyCode;
-}
-
-function handleKeyUp(e) {
-  run_input.handleKeyUp(e.keyCode);
-}
-*/
-function run(move,draw,framerate) {
-  run_input = new InputManager();
-  console.log("running");
-  function wrapmove() {
-     run_input.cycle();
-     move();
-  }
-  run_timer=new FrameTimer(wrapmove,draw);
-}
-
-makeCanvas(640,480);
-//end of std whio helper
+	makeCanvas(640,480);
+	//end of std whio helper
 
 
-function distance(a,b) {
-  var dx=a.x-b.x;
-  var dy=a.y-b.y;
-  var l2 = (dx*dx+dy*dy);
-  if (l2===0) return 0;
-  return Math.sqrt(l2);
-}
+	function distance(a,b) {
+		var dx=a.x-b.x;
+		var dy=a.y-b.y;
+		var l2 = (dx*dx+dy*dy);
+		if (l2===0) return 0;
+		return Math.sqrt(l2);
+	}
 
-function rgb(red,green,blue,alpha) {
-    if (alpha === undefined) return ("rgb("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+")");
-    return ("rgba("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+","+alpha+")");
-}
+	function rgb(red,green,blue,alpha) {
+			if (alpha === undefined) return ("rgb("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+")");
+			return ("rgba("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+","+alpha+")");
+	}
 
-function grey(shade,alpha) {
-	shade = Math.floor(shade);
-	return rgb(shade,shade,shade,alpha);
-}
+	function grey(shade,alpha) {
+		shade = Math.floor(shade);
+		return rgb(shade,shade,shade,alpha);
+	}
 
-function setRgb(red,green,blue,alpha) {
-	 setColour(rgb(red,green,blue,alpha));
-}
+	function setRgb(red,green,blue,alpha) {
+		 setColour(rgb(red,green,blue,alpha));
+	}
 
-function setGrey(shade,alpha) {
-	 setColour(grey(shade,alpha));
-}
+	function setGrey(shade,alpha) {
+		 setColour(grey(shade,alpha));
+	}
 
-var random=Math.random;
-var stringify =JSON.stringify;
-var setColor=setColour;
+	var random=Math.random;
+	var stringify =JSON.stringify;
+	var setColor=setColour;
 
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
- 
-// requestAnimationFrame polyfill by Erik M�ller
-// fixes from Paul Irish and Tino Zijdel
- 
-(function() {
-var lastTime = 0;
-var vendors = ['ms', 'moz', 'webkit', 'o'];
-for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-|| window[vendors[x]+'CancelRequestAnimationFrame'];
-}
-if (!window.requestAnimationFrame)
-window.requestAnimationFrame = function(callback, element) {
-var currTime = new Date().getTime();
-var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-timeToCall);
-lastTime = currTime + timeToCall;
-return id;
-};
-if (!window.cancelAnimationFrame)
-window.cancelAnimationFrame = function(id) {
-clearTimeout(id);
-};
-}());
+	// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+	// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+	 
+	// requestAnimationFrame polyfill by Erik M�ller
+	// fixes from Paul Irish and Tino Zijdel
+	 
+	(function() {
+	var lastTime = 0;
+	var vendors = ['ms', 'moz', 'webkit', 'o'];
+	for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+	window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+	window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+	|| window[vendors[x]+'CancelRequestAnimationFrame'];
+	}
+	if (!window.requestAnimationFrame)
+	window.requestAnimationFrame = function(callback, element) {
+	var currTime = new Date().getTime();
+	var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+	var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+	timeToCall);
+	lastTime = currTime + timeToCall;
+	return id;
+	};
+	if (!window.cancelAnimationFrame)
+	window.cancelAnimationFrame = function(id) {
+	clearTimeout(id);
+	};
+	}());
 
 
-// This bit ported from Stefan Gustavson's java implementation
-// http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// Read Stefan's excellent paper for details on how this code works.
-//
-// Sean McCullough banksean@gmail.com
-var SimplexNoise = function(r) {
-	if (r === undefined) r = Math;
-  this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0], 
-                                 [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1], 
-                                 [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]; 
-  this.p = [];
-  for (var i=0; i<256; i++) {
-	  this.p[i] = Math.floor(r.random()*256);
-  }
-  // To remove the need for index wrapping, double the permutation table length 
-  this.perm = []; 
-  for(var i=0; i<512; i++) {
-		this.perm[i]=this.p[i & 255];
-	} 
+	// This bit ported from Stefan Gustavson's java implementation
+	// http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
+	// Read Stefan's excellent paper for details on how this code works.
+	//
+	// Sean McCullough banksean@gmail.com
+	var SimplexNoise = function(r) {
+		if (r === undefined) r = Math;
+		this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0], 
+																	 [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1], 
+																	 [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]; 
+		this.p = [];
+		for (var i=0; i<256; i++) {
+			this.p[i] = Math.floor(r.random()*256);
+		}
+		// To remove the need for index wrapping, double the permutation table length 
+		this.perm = []; 
+		for(var i=0; i<512; i++) {
+			this.perm[i]=this.p[i & 255];
+		} 
 
-  // A lookup table to traverse the simplex around a given point in 4D. 
-  // Details can be found where this table is used, in the 4D noise method. 
-  this.simplex = [ 
-    [0,1,2,3],[0,1,3,2],[0,0,0,0],[0,2,3,1],[0,0,0,0],[0,0,0,0],[0,0,0,0],[1,2,3,0], 
-    [0,2,1,3],[0,0,0,0],[0,3,1,2],[0,3,2,1],[0,0,0,0],[0,0,0,0],[0,0,0,0],[1,3,2,0], 
-    [0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0], 
-    [1,2,0,3],[0,0,0,0],[1,3,0,2],[0,0,0,0],[0,0,0,0],[0,0,0,0],[2,3,0,1],[2,3,1,0], 
-    [1,0,2,3],[1,0,3,2],[0,0,0,0],[0,0,0,0],[0,0,0,0],[2,0,3,1],[0,0,0,0],[2,1,3,0], 
-    [0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0], 
-    [2,0,1,3],[0,0,0,0],[0,0,0,0],[0,0,0,0],[3,0,1,2],[3,0,2,1],[0,0,0,0],[3,1,2,0], 
-    [2,1,0,3],[0,0,0,0],[0,0,0,0],[0,0,0,0],[3,1,0,2],[0,0,0,0],[3,2,0,1],[3,2,1,0]]; 
-};
+		// A lookup table to traverse the simplex around a given point in 4D. 
+		// Details can be found where this table is used, in the 4D noise method. 
+		this.simplex = [ 
+			[0,1,2,3],[0,1,3,2],[0,0,0,0],[0,2,3,1],[0,0,0,0],[0,0,0,0],[0,0,0,0],[1,2,3,0], 
+			[0,2,1,3],[0,0,0,0],[0,3,1,2],[0,3,2,1],[0,0,0,0],[0,0,0,0],[0,0,0,0],[1,3,2,0], 
+			[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0], 
+			[1,2,0,3],[0,0,0,0],[1,3,0,2],[0,0,0,0],[0,0,0,0],[0,0,0,0],[2,3,0,1],[2,3,1,0], 
+			[1,0,2,3],[1,0,3,2],[0,0,0,0],[0,0,0,0],[0,0,0,0],[2,0,3,1],[0,0,0,0],[2,1,3,0], 
+			[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0], 
+			[2,0,1,3],[0,0,0,0],[0,0,0,0],[0,0,0,0],[3,0,1,2],[3,0,2,1],[0,0,0,0],[3,1,2,0], 
+			[2,1,0,3],[0,0,0,0],[0,0,0,0],[0,0,0,0],[3,1,0,2],[0,0,0,0],[3,2,0,1],[3,2,1,0]]; 
+	};
 
-SimplexNoise.prototype.dot = function(g, x, y) { 
-	return g[0]*x + g[1]*y;
-};
+	SimplexNoise.prototype.dot = function(g, x, y) { 
+		return g[0]*x + g[1]*y;
+	};
 
-SimplexNoise.prototype.noise = function(xin, yin) { 
-  var n0, n1, n2; // Noise contributions from the three corners 
-  // Skew the input space to determine which simplex cell we're in 
-  var F2 = 0.5*(Math.sqrt(3.0)-1.0); 
-  var s = (xin+yin)*F2; // Hairy factor for 2D 
-  var i = Math.floor(xin+s); 
-  var j = Math.floor(yin+s); 
-  var G2 = (3.0-Math.sqrt(3.0))/6.0; 
-  var t = (i+j)*G2; 
-  var X0 = i-t; // Unskew the cell origin back to (x,y) space 
-  var Y0 = j-t; 
-  var x0 = xin-X0; // The x,y distances from the cell origin 
-  var y0 = yin-Y0; 
-  // For the 2D case, the simplex shape is an equilateral triangle. 
-  // Determine which simplex we are in. 
-  var i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords 
-  if(x0>y0) {i1=1; j1=0;} // lower triangle, XY order: (0,0)->(1,0)->(1,1) 
-  else {i1=0; j1=1;}      // upper triangle, YX order: (0,0)->(0,1)->(1,1) 
-  // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and 
-  // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where 
-  // c = (3-sqrt(3))/6 
-  var x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords 
-  var y1 = y0 - j1 + G2; 
-  var x2 = x0 - 1.0 + 2.0 * G2; // Offsets for last corner in (x,y) unskewed coords 
-  var y2 = y0 - 1.0 + 2.0 * G2; 
-  // Work out the hashed gradient indices of the three simplex corners 
-  var ii = i & 255; 
-  var jj = j & 255; 
-  var gi0 = this.perm[ii+this.perm[jj]] % 12; 
-  var gi1 = this.perm[ii+i1+this.perm[jj+j1]] % 12; 
-  var gi2 = this.perm[ii+1+this.perm[jj+1]] % 12; 
-  // Calculate the contribution from the three corners 
-  var t0 = 0.5 - x0*x0-y0*y0; 
-  if(t0<0) n0 = 0.0; 
-  else { 
-    t0 *= t0; 
-    n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0);  // (x,y) of grad3 used for 2D gradient 
-  } 
-  var t1 = 0.5 - x1*x1-y1*y1; 
-  if(t1<0) n1 = 0.0; 
-  else { 
-    t1 *= t1; 
-    n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1); 
-  }
-  var t2 = 0.5 - x2*x2-y2*y2; 
-  if(t2<0) n2 = 0.0; 
-  else { 
-    t2 *= t2; 
-    n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2); 
-  } 
-  // Add contributions from each corner to get the final noise value. 
-  // The result is scaled to return values in the interval [-1,1]. 
-  return 70.0 * (n0 + n1 + n2); 
-};
+	SimplexNoise.prototype.noise = function(xin, yin) { 
+		var n0, n1, n2; // Noise contributions from the three corners 
+		// Skew the input space to determine which simplex cell we're in 
+		var F2 = 0.5*(Math.sqrt(3.0)-1.0); 
+		var s = (xin+yin)*F2; // Hairy factor for 2D 
+		var i = Math.floor(xin+s); 
+		var j = Math.floor(yin+s); 
+		var G2 = (3.0-Math.sqrt(3.0))/6.0; 
+		var t = (i+j)*G2; 
+		var X0 = i-t; // Unskew the cell origin back to (x,y) space 
+		var Y0 = j-t; 
+		var x0 = xin-X0; // The x,y distances from the cell origin 
+		var y0 = yin-Y0; 
+		// For the 2D case, the simplex shape is an equilateral triangle. 
+		// Determine which simplex we are in. 
+		var i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords 
+		if(x0>y0) {i1=1; j1=0;} // lower triangle, XY order: (0,0)->(1,0)->(1,1) 
+		else {i1=0; j1=1;}      // upper triangle, YX order: (0,0)->(0,1)->(1,1) 
+		// A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and 
+		// a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where 
+		// c = (3-sqrt(3))/6 
+		var x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords 
+		var y1 = y0 - j1 + G2; 
+		var x2 = x0 - 1.0 + 2.0 * G2; // Offsets for last corner in (x,y) unskewed coords 
+		var y2 = y0 - 1.0 + 2.0 * G2; 
+		// Work out the hashed gradient indices of the three simplex corners 
+		var ii = i & 255; 
+		var jj = j & 255; 
+		var gi0 = this.perm[ii+this.perm[jj]] % 12; 
+		var gi1 = this.perm[ii+i1+this.perm[jj+j1]] % 12; 
+		var gi2 = this.perm[ii+1+this.perm[jj+1]] % 12; 
+		// Calculate the contribution from the three corners 
+		var t0 = 0.5 - x0*x0-y0*y0; 
+		if(t0<0) n0 = 0.0; 
+		else { 
+			t0 *= t0; 
+			n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0);  // (x,y) of grad3 used for 2D gradient 
+		} 
+		var t1 = 0.5 - x1*x1-y1*y1; 
+		if(t1<0) n1 = 0.0; 
+		else { 
+			t1 *= t1; 
+			n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1); 
+		}
+		var t2 = 0.5 - x2*x2-y2*y2; 
+		if(t2<0) n2 = 0.0; 
+		else { 
+			t2 *= t2; 
+			n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2); 
+		} 
+		// Add contributions from each corner to get the final noise value. 
+		// The result is scaled to return values in the interval [-1,1]. 
+		return 70.0 * (n0 + n1 + n2); 
+	};
 
-// 3D simplex noise 
-SimplexNoise.prototype.noise3d = function(xin, yin, zin) { 
-  var n0, n1, n2, n3; // Noise contributions from the four corners 
-  // Skew the input space to determine which simplex cell we're in 
-  var F3 = 1.0/3.0; 
-  var s = (xin+yin+zin)*F3; // Very nice and simple skew factor for 3D 
-  var i = Math.floor(xin+s); 
-  var j = Math.floor(yin+s); 
-  var k = Math.floor(zin+s); 
-  var G3 = 1.0/6.0; // Very nice and simple unskew factor, too 
-  var t = (i+j+k)*G3; 
-  var X0 = i-t; // Unskew the cell origin back to (x,y,z) space 
-  var Y0 = j-t; 
-  var Z0 = k-t; 
-  var x0 = xin-X0; // The x,y,z distances from the cell origin 
-  var y0 = yin-Y0; 
-  var z0 = zin-Z0; 
-  // For the 3D case, the simplex shape is a slightly irregular tetrahedron. 
-  // Determine which simplex we are in. 
-  var i1, j1, k1; // Offsets for second corner of simplex in (i,j,k) coords 
-  var i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords 
-  if(x0>=y0) { 
-    if(y0>=z0) 
-      { i1=1; j1=0; k1=0; i2=1; j2=1; k2=0; } // X Y Z order 
-      else if(x0>=z0) { i1=1; j1=0; k1=0; i2=1; j2=0; k2=1; } // X Z Y order 
-      else { i1=0; j1=0; k1=1; i2=1; j2=0; k2=1; } // Z X Y order 
-    } 
-  else { // x0<y0 
-    if(y0<z0) { i1=0; j1=0; k1=1; i2=0; j2=1; k2=1; } // Z Y X order 
-    else if(x0<z0) { i1=0; j1=1; k1=0; i2=0; j2=1; k2=1; } // Y Z X order 
-    else { i1=0; j1=1; k1=0; i2=1; j2=1; k2=0; } // Y X Z order 
-  } 
-  // A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z), 
-  // a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and 
-  // a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where 
-  // c = 1/6.
-  var x1 = x0 - i1 + G3; // Offsets for second corner in (x,y,z) coords 
-  var y1 = y0 - j1 + G3; 
-  var z1 = z0 - k1 + G3; 
-  var x2 = x0 - i2 + 2.0*G3; // Offsets for third corner in (x,y,z) coords 
-  var y2 = y0 - j2 + 2.0*G3; 
-  var z2 = z0 - k2 + 2.0*G3; 
-  var x3 = x0 - 1.0 + 3.0*G3; // Offsets for last corner in (x,y,z) coords 
-  var y3 = y0 - 1.0 + 3.0*G3; 
-  var z3 = z0 - 1.0 + 3.0*G3; 
-  // Work out the hashed gradient indices of the four simplex corners 
-  var ii = i & 255; 
-  var jj = j & 255; 
-  var kk = k & 255; 
-  var gi0 = this.perm[ii+this.perm[jj+this.perm[kk]]] % 12; 
-  var gi1 = this.perm[ii+i1+this.perm[jj+j1+this.perm[kk+k1]]] % 12; 
-  var gi2 = this.perm[ii+i2+this.perm[jj+j2+this.perm[kk+k2]]] % 12; 
-  var gi3 = this.perm[ii+1+this.perm[jj+1+this.perm[kk+1]]] % 12; 
-  // Calculate the contribution from the four corners 
-  var t0 = 0.6 - x0*x0 - y0*y0 - z0*z0; 
-  if(t0<0) n0 = 0.0; 
-  else { 
-    t0 *= t0; 
-    n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0, z0); 
-  }
-  var t1 = 0.6 - x1*x1 - y1*y1 - z1*z1; 
-  if(t1<0) n1 = 0.0; 
-  else { 
-    t1 *= t1; 
-    n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1, z1); 
-  } 
-  var t2 = 0.6 - x2*x2 - y2*y2 - z2*z2; 
-  if(t2<0) n2 = 0.0; 
-  else { 
-    t2 *= t2; 
-    n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2, z2); 
-  } 
-  var t3 = 0.6 - x3*x3 - y3*y3 - z3*z3; 
-  if(t3<0) n3 = 0.0; 
-  else { 
-    t3 *= t3; 
-    n3 = t3 * t3 * this.dot(this.grad3[gi3], x3, y3, z3); 
-  } 
-  // Add contributions from each corner to get the final noise value. 
-  // The result is scaled to stay just inside [-1,1] 
-  return 32.0*(n0 + n1 + n2 + n3); 
-};
+	// 3D simplex noise 
+	SimplexNoise.prototype.noise3d = function(xin, yin, zin) { 
+		var n0, n1, n2, n3; // Noise contributions from the four corners 
+		// Skew the input space to determine which simplex cell we're in 
+		var F3 = 1.0/3.0; 
+		var s = (xin+yin+zin)*F3; // Very nice and simple skew factor for 3D 
+		var i = Math.floor(xin+s); 
+		var j = Math.floor(yin+s); 
+		var k = Math.floor(zin+s); 
+		var G3 = 1.0/6.0; // Very nice and simple unskew factor, too 
+		var t = (i+j+k)*G3; 
+		var X0 = i-t; // Unskew the cell origin back to (x,y,z) space 
+		var Y0 = j-t; 
+		var Z0 = k-t; 
+		var x0 = xin-X0; // The x,y,z distances from the cell origin 
+		var y0 = yin-Y0; 
+		var z0 = zin-Z0; 
+		// For the 3D case, the simplex shape is a slightly irregular tetrahedron. 
+		// Determine which simplex we are in. 
+		var i1, j1, k1; // Offsets for second corner of simplex in (i,j,k) coords 
+		var i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords 
+		if(x0>=y0) { 
+			if(y0>=z0) 
+				{ i1=1; j1=0; k1=0; i2=1; j2=1; k2=0; } // X Y Z order 
+				else if(x0>=z0) { i1=1; j1=0; k1=0; i2=1; j2=0; k2=1; } // X Z Y order 
+				else { i1=0; j1=0; k1=1; i2=1; j2=0; k2=1; } // Z X Y order 
+			} 
+		else { // x0<y0 
+			if(y0<z0) { i1=0; j1=0; k1=1; i2=0; j2=1; k2=1; } // Z Y X order 
+			else if(x0<z0) { i1=0; j1=1; k1=0; i2=0; j2=1; k2=1; } // Y Z X order 
+			else { i1=0; j1=1; k1=0; i2=1; j2=1; k2=0; } // Y X Z order 
+		} 
+		// A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z), 
+		// a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and 
+		// a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where 
+		// c = 1/6.
+		var x1 = x0 - i1 + G3; // Offsets for second corner in (x,y,z) coords 
+		var y1 = y0 - j1 + G3; 
+		var z1 = z0 - k1 + G3; 
+		var x2 = x0 - i2 + 2.0*G3; // Offsets for third corner in (x,y,z) coords 
+		var y2 = y0 - j2 + 2.0*G3; 
+		var z2 = z0 - k2 + 2.0*G3; 
+		var x3 = x0 - 1.0 + 3.0*G3; // Offsets for last corner in (x,y,z) coords 
+		var y3 = y0 - 1.0 + 3.0*G3; 
+		var z3 = z0 - 1.0 + 3.0*G3; 
+		// Work out the hashed gradient indices of the four simplex corners 
+		var ii = i & 255; 
+		var jj = j & 255; 
+		var kk = k & 255; 
+		var gi0 = this.perm[ii+this.perm[jj+this.perm[kk]]] % 12; 
+		var gi1 = this.perm[ii+i1+this.perm[jj+j1+this.perm[kk+k1]]] % 12; 
+		var gi2 = this.perm[ii+i2+this.perm[jj+j2+this.perm[kk+k2]]] % 12; 
+		var gi3 = this.perm[ii+1+this.perm[jj+1+this.perm[kk+1]]] % 12; 
+		// Calculate the contribution from the four corners 
+		var t0 = 0.6 - x0*x0 - y0*y0 - z0*z0; 
+		if(t0<0) n0 = 0.0; 
+		else { 
+			t0 *= t0; 
+			n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0, z0); 
+		}
+		var t1 = 0.6 - x1*x1 - y1*y1 - z1*z1; 
+		if(t1<0) n1 = 0.0; 
+		else { 
+			t1 *= t1; 
+			n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1, z1); 
+		} 
+		var t2 = 0.6 - x2*x2 - y2*y2 - z2*z2; 
+		if(t2<0) n2 = 0.0; 
+		else { 
+			t2 *= t2; 
+			n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2, z2); 
+		} 
+		var t3 = 0.6 - x3*x3 - y3*y3 - z3*z3; 
+		if(t3<0) n3 = 0.0; 
+		else { 
+			t3 *= t3; 
+			n3 = t3 * t3 * this.dot(this.grad3[gi3], x3, y3, z3); 
+		} 
+		// Add contributions from each corner to get the final noise value. 
+		// The result is scaled to stay just inside [-1,1] 
+		return 32.0*(n0 + n1 + n2 + n3); 
+	};
 
-SimplexNoise.default = new SimplexNoise(Math);
+	SimplexNoise.default = new SimplexNoise(Math);
 
-function noise2d(x,y) {
-  return SimplexNoise.default.noise(x,y);
-}
+	function noise2d(x,y) {
+		return SimplexNoise.default.noise(x,y);
+	}
 
-function noise3d(x,y,z) {
-  return SimplexNoise.default.noise3d(x,y,z);
-}
+	function noise3d(x,y,z) {
+		return SimplexNoise.default.noise3d(x,y,z);
+	}	
+	
+	makeGlobal(
+		log,drawImageData,print,clear,setPixel,makeBackground,setColour,drawLine,drawCircle,fillCircle,drawRectangle,fillRectangle,loadImage,
+		drawImage,drawImageRect,canvasSave,canvasRestore,canvasTransform,canvasTranslate,canvasRotate,canvasScale,drawPolygon,fillPolygon,
+		distance,rgb,grey,setRgb,setGrey,random,stringify,setColor,keyIsDown,keyWentDown,getMousePosition,getMouseInfo,run,setInfo,noise2d,noise3d);
+		
+	return API;
+})();
+
 
 /*
  *  Sugar Library v1.4.1
@@ -870,3 +839,4 @@ this.length),b)+this},padRight:function(a,b){a=Ic(a);return this+Jc(S(0,a-this.l
 function(b,c){return J(a,c)?a[c]:b})}});H(s,!0,!0,{insert:s.prototype.add});
 (function(a){if(ba.btoa)Nc=ba.btoa,Oc=ba.atob;else{var b=/[^A-Za-z0-9\+\/\=]/g;Nc=function(b){var d="",e,g,f,h,l,n,x=0;do e=b.charCodeAt(x++),g=b.charCodeAt(x++),f=b.charCodeAt(x++),h=e>>2,e=(e&3)<<4|g>>4,l=(g&15)<<2|f>>6,n=f&63,isNaN(g)?l=n=64:isNaN(f)&&(n=64),d=d+a.charAt(h)+a.charAt(e)+a.charAt(l)+a.charAt(n);while(x<b.length);return d};Oc=function(c){var d="",e,g,f,h,l,n=0;if(c.match(b))throw Error("String contains invalid base64 characters");c=c.replace(/[^A-Za-z0-9\+\/\=]/g,"");do e=a.indexOf(c.charAt(n++)),
 g=a.indexOf(c.charAt(n++)),h=a.indexOf(c.charAt(n++)),l=a.indexOf(c.charAt(n++)),e=e<<2|g>>4,g=(g&15)<<4|h>>2,f=(h&3)<<6|l,d+=s.fromCharCode(e),64!=h&&(d+=s.fromCharCode(g)),64!=l&&(d+=s.fromCharCode(f));while(n<c.length);return d}}})("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=");})();
+
