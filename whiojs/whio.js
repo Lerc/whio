@@ -189,6 +189,7 @@ var Whio = (function(){
 		currentCanvasHelper.fillRectangle(x,y,width,height);
 	}
 
+	
 	function print(text,x,y) {
 		currentCanvasHelper.print(text,x,y);
 	}
@@ -706,9 +707,9 @@ var Whio = (function(){
 	}	
 	
 	makeGlobal(
-		log,drawImageData,print,clear,setPixel,makeBackground,setColour,drawLine,drawCircle,fillCircle,drawRectangle,fillRectangle,loadImage,
+		log,print,clear,makeBackground,setColour,drawLine,drawCircle,fillCircle,drawRectangle,fillRectangle,loadImage,
 		drawImage,drawImageRect,canvasSave,canvasRestore,canvasTransform,canvasTranslate,canvasRotate,canvasScale,drawPolygon,fillPolygon,
-		distance,rgb,grey,setRgb,setGrey,random,stringify,setColor,keyIsDown,keyWentDown,getMousePosition,getMouseInfo,run,setInfo,noise2d,noise3d);
+		distance,rgb,grey,setRgb,setGrey,random,stringify,setColor,keyIsDown,keyWentDown,getMousePosition,getMouseInfo,run,noise2d,noise3d);
 		
 	return API;
 })();
