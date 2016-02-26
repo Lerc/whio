@@ -1,3 +1,86 @@
+//Canvas extensions from MJS
+	CanvasRenderingContext2D.prototype.polygon = function (x,y,r,n,t){
+	 t=t ||0;	
+   var m = t+Math.PI*2;
+   var px = x - r * Math.sin(t);
+   var py = y - r * Math.cos(t);
+   this.beginPath();
+   this.moveTo(px,py);
+   while (t<m){
+      px = x - r * Math.sin(t);
+      py = y - r * Math.cos(t);
+      t += Math.PI*2 / n;
+      this.lineTo(px,py);
+   }
+   this.closePath();
+	};
+
+	CanvasRenderingContext2D.prototype.star = function (x,y,r,ratio,n,t){
+		 t=t ||0;	
+	   var m = t + Math.PI * 2;
+	   var px = x - r * Math.sin(t);
+	   var py = y - r * Math.cos(t);
+	   var dt = Math.PI / n;
+	   this.beginPath();
+	   this.moveTo(px, py);
+	   t += dt ;
+	   px = x - ratio * r * Math.sin(t);
+	   py = y - ratio * r * Math.cos(t);
+	   t += dt;
+	   this.lineTo(px, py);
+	   while (t < m) {
+	       px = x - r * Math.sin(t);
+	       py = y - r * Math.cos(t);
+	       this.lineTo(px, py);
+	       t += dt;
+	       px = x - ratio * r * Math.sin(t);
+	       py = y - ratio * r * Math.cos(t);
+	       this.lineTo(px, py);
+	       t += dt;
+	   }
+	   this.closePath();
+	};
+
+	CanvasRenderingContext2D.prototype.roundRect = function (x,y,w,h,r) {
+	   if (!Array.isArray(r)){
+	      r = Math.abs(r||0);
+	      r = Math.min(r,Math.min(w/2,h/2));
+	      r = [r,r,r,r];
+	   } else {
+	      for (var i =0;i<4;i++){
+	         r[i] =  Math.min(Math.abs(r[i]),Math.min(w/2,h/2)) || 0;
+	      }
+	   }
+	    var tpi = 2*Math.PI;
+	   this.beginPath();
+	   this.moveTo(x+r[0],y);
+	   this.lineTo(x+w-r[1],y);
+	   this.arc(x+w-r[1],y+r[1],r[1],0.75*tpi,0,false);
+	   this.lineTo(x+w,y+h-r[2]);
+	   this.arc(x+w-r[2],y+h-r[2],r[2],0,0.25*tpi,false);
+	   this.lineTo(x+r,y+h);
+	   this.arc(x+r[3],y+h-r[3],r[3],0.25*tpi,0.5*tpi,false);
+	   this.lineTo(x,y+r[0]);
+	   this.arc(x+r[0],y+r[0],r[0],0.5*tpi,0.75*tpi,false);
+	   this.closePath();
+	};
+
+	CanvasRenderingContext2D.prototype.shape = function (x,y,points,s,t){
+	   var startx = x + s*(Math.cos(t)*points[0][0] - Math.sin(t)*points[0][1]);
+	   var starty = y + s*(Math.sin(t)*points[0][0] + Math.cos(t)*points[0][1]);
+	   this.beginPath();
+	   this.moveTo(startx, starty);
+	   for (var i = 1;i<points.length;i++){
+	      var px = x + s*(Math.cos(t)*points[i][0] - Math.sin(t)*points[i][1]);
+	      var py = y + s*(Math.sin(t)*points[i][0] + Math.cos(t)*points[i][1]);
+	      this.lineTo(px, py);
+	   }
+	   this.closePath();
+	};
+
+
+
+
 var Whio = (function(){
 	var API = {};
 	
@@ -73,32 +156,32 @@ var Whio = (function(){
 	};
 
 	CanvasHelper.prototype.drawShape = function (x,y,points,s,t) {	
-		this.ctx.shape(x,y,points,s,t)
-		this.ctx.stroke();
+		//this.ctx.shape(x,y,points,s,t);
+		//this.ctx.stroke();
 	};
 
 	CanvasHelper.prototype.fillShape = function (x,y,points,s,t) {
-		this.ctx.shape(x,y,points,s,t)
-		this.ctx.fill();
+		//this.ctx.shape(x,y,points,s,t);
+		//this.ctx.fill();
 	};
 
 	CanvasHelper.prototype.drawPolygon = function (x,y,r,n,t) {	
-		this.ctx.polygon(x,y,r,n,t)
+		this.ctx.polygon(x,y,r,n,t);
 		this.ctx.stroke();
 	};
 
 	CanvasHelper.prototype.fillPolygon = function (x,y,r,n,t) {
-		this.ctx.polygon(x,y,r,n,t)
+		this.ctx.polygon(x,y,r,n,t);
 		this.ctx.fill();
 	};
 
   CanvasHelper.prototype.drawStar = function (x,y,r,ratio,n,t){ 
-		this.ctx.star(x,y,r,n,t)
+		this.ctx.star(x,y,r,ratio,n,t);
 		this.ctx.stroke();
 	};
 
   CanvasHelper.prototype.fillStar = function (x,y,r,ratio,n,t){ 
-		this.ctx.star(x,y,r,n,t)
+		this.ctx.star(x,y,r,ratio,n,t);
 		this.ctx.fill();
 	};
 
@@ -134,16 +217,14 @@ var Whio = (function(){
 	CanvasHelper.prototype.clear = function () {
 		this.ctx.clearRect(0,0,this.width,this.height); 
 		this.textX=0;
-		this.textY=this.lineSpacing;
-		
+		this.textY=this.lineSpacing;		
 	}; 
 
 	CanvasHelper.prototype.makeBackground = function() {
 			this.canvas.style.backgroundImage="url("+this.canvas.toDataURL("image/png")+")";
 	};
 
-	CanvasHelper.prototype.print = function(text,x,y) {
-			
+	CanvasHelper.prototype.print = function(text,x,y) {			
 		 if (!Object.isNumber(x)) x=this.textX;
 		 if (!Object.isNumber(y)) y=this.textY;
 		 if (Object.isObject(text)) text= JSON.stringify(text);   
@@ -193,10 +274,10 @@ var Whio = (function(){
 	}
 
 	function drawPolygon(x,y,radius,number_of_sides,rotation_angle) { 
-		currentCanvasHelper.drawRectangle(x,y,radius,number_of_sides,rotation_angle); 
+		currentCanvasHelper.drawPolygon(x,y,radius,number_of_sides,rotation_angle); 
 	}
 	function drawStar(x,y,radius,ratio,number_of_sides,rotation_angle) { 
-		currentCanvasHelper.drawRectangle(x,y,radius,ratio,number_of_sides,rotation_angle); 
+		currentCanvasHelper.drawStar(x,y,radius,ratio,number_of_sides,rotation_angle); 
 	}
 
 	function fillCircle(centerX,centerY,size) { 
@@ -204,7 +285,15 @@ var Whio = (function(){
 	}
 
 	function fillRectangle(x,y,width,height,r) {
-		currentCanvasHelper.fillRectangle(x,y,width,height);
+		currentCanvasHelper.fillRectangle(x,y,width,height,r);
+	}
+
+	function fillPolygon(x,y,radius,number_of_sides,rotation_angle) { 
+		currentCanvasHelper.fillPolygon(x,y,radius,number_of_sides,rotation_angle); 
+	}
+
+	function fillStar(x,y,radius,ratio,number_of_sides,rotation_angle) { 
+		currentCanvasHelper.fillStar(x,y,radius,ratio,number_of_sides,rotation_angle); 
 	}
 
 	
@@ -418,39 +507,39 @@ var Whio = (function(){
 	}
 
 	function FrameTimer(move,draw,framerate) {
-			if (!framerate) framerate=60;
-			var frame_rate=framerate;
-			var interval=1000.0/frame_rate;
-			var launch_time=new Date();
-			var age_in_ticks=0;
-			var counter=0;
-			var timer=this;
-			this.draw=draw;
-			this.move=move;
-			function timerTick() {
-				if (run_imagesPending > 0) {
-					clear();
-					print("Loading "+run_imagesPending+" images");
-				} else {
-					var ticks=0;
-					var now=new Date();
-					var age = now-launch_time;
-					age_in_ticks= Math.floor(age/interval);
-					//while (counter<age_in_ticks) {
-							counter++;
-							ticks++;
-					if (timer.move) timer.move();
-					//}
-					if (ticks>0) {
-						canvasSave();
-							if (timer.draw) timer.draw();
-						canvasRestore();
-					}
+		if (!framerate) framerate=60;
+		var frame_rate=framerate;
+		var interval=1000.0/frame_rate;
+		var launch_time=new Date();
+		var age_in_ticks=0;
+		var counter=0;
+		var timer=this;
+		this.draw=draw;
+		this.move=move;
+		function timerTick() {
+			if (run_imagesPending > 0) {
+				clear();
+				print("Loading "+run_imagesPending+" images");
+			} else {
+				var ticks=0;
+				var now=new Date();
+				var age = now-launch_time;
+				age_in_ticks= Math.floor(age/interval);
+				//while (counter<age_in_ticks) {
+						counter++;
+						ticks++;
+				if (timer.move) timer.move();
+				//}
+				if (ticks>0) {
+					canvasSave();
+						if (timer.draw) timer.draw();
+					canvasRestore();
 				}
-					requestAnimationFrame(timerTick);
-			}   
-			timerTick();
 			}
+				requestAnimationFrame(timerTick);
+		}   
+		timerTick();
+	}
 
 
 	function run(move,draw,framerate) {
@@ -713,93 +802,17 @@ var Whio = (function(){
 	}	
 	
 	makeGlobal(
-		log,print,clear,makeBackground,setColour,drawLine,drawCircle,fillCircle,drawRectangle,fillRectangle,loadImage,
-		drawImage,drawImageRect,canvasSave,canvasRestore,canvasTransform,canvasTranslate,canvasRotate,canvasScale,drawPolygon,fillPolygon,
-		distance,rgb,grey,setRgb,setGrey,random,stringify,setColor,keyIsDown,keyWentDown,getMousePosition,getMouseInfo,run,noise2d,noise3d);
+		log,print,clear,makeBackground,setColour,setColor,setRgb,setGrey,drawLine,
+		drawCircle,drawRectangle,drawPolygon,drawShape,drawStar,
+		fillCircle,fillRectangle,fillPolygon,fillShape,fillStar,
+		loadImage,drawImage,drawImageRect,
+		canvasSave,canvasRestore,canvasTransform,canvasTranslate,canvasRotate,canvasScale,
+		keyIsDown,keyWentDown,getMousePosition,getMouseInfo,
+		distance,rgb,grey,random,stringify,noise2d,noise3d,
+		run,makeCanvas,makeFullPageCanvas);
 		
 	return API;
 })();
-
-//Canvas extensions from MJS
-	CanvasRenderingContext2D.prototype.polygon = function (x,y,r,n,t){
-   var m = t+Math.PI*2;
-   var px = x - r * Math.sin(t);
-   var py = y - r * Math.cos(t);
-   this.beginPath();
-   this.moveTo(px,py);
-   while (t<m){
-      px = x - r * Math.sin(t);
-      py = y - r * Math.cos(t);
-      t += Math.PI*2 / n;
-      this.lineTo(px,py);
-   }
-   this.closePath();
-	}
-
-	CanvasRenderingContext2D.prototype.star = function (x,y,r,ratio,n,t){
-	   var m = t + Math.PI * 2;
-	   var px = x - r * Math.sin(t);
-	   var py = y - r * Math.cos(t);
-	   var dt = Math.PI / n;
-	   this.beginPath();
-	   this.moveTo(px, py);
-	   t += dt ;
-	   px = x - ratio * r * Math.sin(t);
-	   py = y - ratio * r * Math.cos(t);
-	   t += dt;
-	   this.lineTo(px, py);
-	   while (t < m) {
-	       px = x - r * Math.sin(t);
-	       py = y - r * Math.cos(t);
-	       this.lineTo(px, py);
-	       t += dt;
-	       px = x - ratio * r * Math.sin(t);
-	       py = y - ratio * r * Math.cos(t);
-	       this.lineTo(px, py);
-	       t += dt;
-	   }
-	   this.closePath();
-	}
-
-
-
-	CanvasRenderingContext2D.prototype.roundRect = function (x,y,w,h,r) {
-	   if (!Array.isArray(r)){
-	      r = Math.abs(r);
-	      r = Math.min(r,Math.min(w/2,h/2));
-	      r = [r,r,r,r];
-	   } else {
-	      for (var i =0;i<4;i++){
-	         r[i] =  Math.min(Math.abs(r[i]),Math.min(w/2,h/2)) || 0;
-	      }
-	   }
-	    var tpi = 2*Math.PI;
-	   this.beginPath();
-	   this.moveTo(x+r[0],y);
-	   this.lineTo(x+w-r[1],y);
-	   this.arc(x+w-r[1],y+r[1],r[1],0.75*tpi,0,false);
-	   this.lineTo(x+w,y+h-r[2]);
-	   this.arc(x+w-r[2],y+h-r[2],r[2],0,0.25*tpi,false);
-	   this.lineTo(x+r,y+h);
-	   this.arc(x+r[3],y+h-r[3],r[3],0.25*tpi,0.5*tpi,false);
-	   this.lineTo(x,y+r[0]);
-	   this.arc(x+r[0],y+r[0],r[0],0.5*tpi,0.75*tpi,false);
-	   this.closePath();
-	}
-
-	CanvasRenderingContext2D.prototype.shape = function (x,y,points,s,t){
-	   var px = x + s*(Math.cos(t)*points[0][0] - Math.sin(t)*points[0][1]);
-	   var py = y + s*(Math.sin(t)*points[0][0] + Math.cos(t)*points[0][1]);
-	   this.beginPath();
-	   this.moveTo(px, py);
-	   for (var i = 1;i<points.length;i++){
-	      var px = x + s*(Math.cos(t)*points[i][0] - Math.sin(t)*points[i][1]);
-	      var py = y + s*(Math.sin(t)*points[i][0] + Math.cos(t)*points[i][1]);
-	      this.lineTo(px, py);
-	   }
-	   this.closePath();
-	}
-
 
 /*
  *  Sugar Library v1.4.1
