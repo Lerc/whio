@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	
+	<title>Page Title</title>
+	
+	<meta name="description" content="">
+	
+  <!-- Mobile-friendly viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+</head>
+<body>
+	<header role="banner">
+	</header>
+	<main role="main">
+		<canvas> </canvas>
+	</main>
+	<aside role="complementary">
+	</aside>
+	<footer role="contentinfo">
+	</footer>
+
+<script>
+
+</script>
+
+	<script src="../whiojs/whio.js"></script>
+
+	<script>
+			print ("text");
+			setColour("red");
+			print ("more text" , 500,30);
+
+			setColour("Black");
+			print ("Lines" , 100,90);
+			drawLine (100,100,150,150);
+			drawLine (150,100,100,150);
+			drawLine (120,100,110,150);
+
+			print ("Rectangles" , 200,90);
+			drawRectangle (200,100,30,30);
+			drawRectangle (250,100,20,60);
+			drawRectangle (200,150,30,30,10);
+			drawRectangle (275,100,20,60,[5,0,5,0]);
+
+			fillRectangle (200,200,30,30);
+			setColour("yellow");
+			fillRectangle (250,200,20,60);
+			setColour("Blue");
+			fillRectangle (200,250,30,30,10);
+			setColour("green");
+			fillRectangle (275,200,20,60,[5,0,5,0]);
+
+			setColour("black");
+			print ("Circles" , 350,90);
+			drawCircle(380,130,30);
+			drawCircle(380,130,10);
+			drawCircle(430,150,50);
+			drawCircle(400,150,40);
+
+			fillCircle(380,230,30);
+			setColour("yellow");
+			fillCircle(380,230,10);
+			setColour("Blue");
+			fillCircle(430,250,50);
+			setColour("green");
+			fillCircle(400,250,40);
+
+			setColour("black");
+			print ("Polygons" , 500,90);
+			drawPolygon(520,130,15,5);
+			drawPolygon(520,130,5,3);
+			drawPolygon(570,150,25,6);
+			drawPolygon(540,150,20,6,33);
+
+			fillPolygon(520,230,15,5);
+			setColour("yellow");
+			fillPolygon(520,230,5,3);
+			setColour("Blue");
+			fillPolygon(570,250,25,6);
+			setColour("green");
+			fillPolygon(540,250,20,6,33);
+
+
+			setColour("black");
+			print ("Stars", 100,190);
+			drawStar(120,230,30,1.5,5);
+			drawStar(120,230,20,0.5,5);
+
+			drawStar(120,330,30,1.5,9,12);
+			drawStar(120,330,20,0.25,3);
+
+
+			fillStar(120,430,30,1.5,5);
+			setColour("yellow");
+			fillStar(120,430,20,0.5,5);
+
+			setColour("rgba(0,0,255,0.5)");
+			fillStar(120,430,30,1.5,9,12);
+
+			setColour("rgba(0,255,0,0.5)");			
+			fillStar(120,430,20,0.25,3);
+
+	</script>
+</body>
+</html>
