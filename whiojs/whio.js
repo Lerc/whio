@@ -94,15 +94,18 @@ var Whio = (function(){
 			}
 		}  
 	}
-	
-	function makeGlobal() {
-		for (var i=0; i<arguments.length; i++) {
-			var fun = arguments[i];
-			window[fun.name]=fun;
-		}
+    
+	function makeGlobal( functions ) {
+        assignFunctionsToObject(window,arguments);
 	}
 	
-
+    function assignFunctionsToObject(object,functionList) {
+		for (var i=0; i<functionList.length; i++) {
+			var fun = functionList[i];
+			object[fun.name]=fun;
+		}        
+    }
+    
 	var defaultCanvasHelper;
 	var currentCanvasHelper;
 
