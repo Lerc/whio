@@ -98,38 +98,38 @@ var Whio = (function(){
 	}
     
 	function makeGlobal( functions ) {
-        assignFunctionsToObject(window,arguments);
+    assignFunctionsToObject(window,arguments);
 	}
 	
-    function assignFunctionsToObject(object,functionList) {
-		for (var i=0; i<functionList.length; i++) {
-			var fun = functionList[i];
-			object[fun.name]=fun;
-		}        
-    }
+  function assignFunctionsToObject(object,functionList) {
+    for (var i=0; i<functionList.length; i++) {
+      var fun = functionList[i];
+      object[fun.name]=fun;
+    }        
+  }
     
-    function arrayPoints2d(points) {
-        if (Object.isArray(points[0])) return Object.clone(points);        
-        return points.map(function(point) {return [point.x,point.y];} )       
-    }
+  function arrayPoints2d(points) {
+    if (Object.isArray(points[0])) return Object.clone(points);        
+    return points.map(function(point) {return [point.x,point.y];} )       
+  }
     
 	var defaultCanvasHelper;
 	var currentCanvasHelper;
 
 	function CanvasHelper (canvas) {
-			this.canvas = canvas;
-			this.ctx = canvas.getContext("2d");
-			this.width = canvas.width;
-			this.height = canvas.height;
-			this.textX=0;
-			this.textY=20;
-			this.ctx.font="20px sans-serif";
-			this.lineSpacing=23;
-			
-			if (! defaultCanvasHelper ) {
-				defaulCanvasHelper=this;
-			}
-			currentCanvasHelper=this;
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+    this.width = canvas.width;
+    this.height = canvas.height;
+    this.textX=0;
+    this.textY=20;
+    this.ctx.font="20px sans-serif";
+    this.lineSpacing=23;
+
+    if (! defaultCanvasHelper ) {
+      defaulCanvasHelper=this;
+    }
+    currentCanvasHelper=this;
 	}
 
 	CanvasHelper.prototype.drawLine = function (x1,y1,x2,y2) {
@@ -195,7 +195,7 @@ var Whio = (function(){
 		this.ctx.fill();
 	};
 
-	CanvasHelper.prototype.drawImage = function (image,x,y,frame,angle) {
+  CanvasHelper.prototype.drawImage = function (image,x,y,frame,angle) {
 		if (!frame) frame=0;
 		var handlex=0;
 		var handley=0;
@@ -208,30 +208,30 @@ var Whio = (function(){
 		var frameheight = Math.floor(image.height / image.framesHigh);
 		
 		if (angle) {
-			 this.ctx.save();
-			 this.ctx.translate((x),(y));
-			 this.ctx.rotate(angle);
-			 this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,-handlex,-handley,framewidth,frameheight);
+      this.ctx.save();
+      this.ctx.translate((x),(y));
+      this.ctx.rotate(angle);
+      this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,-handlex,-handley,framewidth,frameheight);
 
-			 this.ctx.restore();
+      this.ctx.restore();
 		} else {
-			 this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,x-handlex,y-handley,framewidth,frameheight);
+      this.ctx.drawImage(image,ox*framewidth,oy*frameheight,framewidth,frameheight,x-handlex,y-handley,framewidth,frameheight);
 		}
 	};
 
 	CanvasHelper.prototype.setColour = function (colour) {
-			this.ctx.fillStyle=colour;
-			this.ctx.strokeStyle=colour;
+    this.ctx.fillStyle=colour;
+    this.ctx.strokeStyle=colour;
 	};
 
 	CanvasHelper.prototype.clear = function () {
-		this.ctx.clearRect(0,0,this.width,this.height); 
-		this.textX=0;
-		this.textY=this.lineSpacing;		
+    this.ctx.clearRect(0,0,this.width,this.height); 
+    this.textX=0;
+    this.textY=this.lineSpacing;		
 	}; 
 
 	CanvasHelper.prototype.makeBackground = function() {
-			this.canvas.style.backgroundImage="url("+this.canvas.toDataURL("image/png")+")";
+    this.canvas.style.backgroundImage="url("+this.canvas.toDataURL("image/png")+")";
 	};
 
 	CanvasHelper.prototype.print = function(text,x,y) {			
@@ -244,31 +244,31 @@ var Whio = (function(){
 	};
 
 	function makeFullPageCanvas() {
-			var firstDiv = document.getElementsByTagName('div')[0];
-			if (!firstDiv) {
-				firstDiv=document.createElement("div");
-				document.body.appendNode(firstDiv);
-			}  
-			body.innerHTML='<canvas id=fullpagecanvas STYLE="position: absolute; top: 0; left:0;"></canvas>';
-			var canvas = document.querySelector("#fullpagecanvas");
-			canvas.width = self.innerWidth;
-			canvas.height = self.innerHeight;
-			var helper = new CanvasHelper(canvas);
-			canvas.style.backgroundColor="#efe";
+    var firstDiv = document.getElementsByTagName('div')[0];
+    if (!firstDiv) {
+      firstDiv=document.createElement("div");
+      document.body.appendNode(firstDiv);
+    }  
+    body.innerHTML='<canvas id=fullpagecanvas STYLE="position: absolute; top: 0; left:0;"></canvas>';
+    var canvas = document.querySelector("#fullpagecanvas");
+    canvas.width = self.innerWidth;
+    canvas.height = self.innerHeight;
+    var helper = new CanvasHelper(canvas);
+    canvas.style.backgroundColor="#efe";
 	}
 
 	function makeCanvas(width,height) {
-			var firstDiv = document.getElementsByTagName('div')[0];
-			if (!firstDiv) {
-				firstDiv=document.createElement("div");
-				document.body.appendChild(firstDiv);
-			}  
-			firstDiv.innerHTML='<div style="Text-Align:center"> <canvas id=maincanvas></canvas> </div>';
-			var canvas = document.querySelector("#maincanvas");
-			canvas.width = width;
-			canvas.height = height;
-			canvas.style.backgroundColor="#efe";
-			var helper = new CanvasHelper(canvas);
+    var firstDiv = document.getElementsByTagName('div')[0];
+    if (!firstDiv) {
+      firstDiv=document.createElement("div");
+      document.body.appendChild(firstDiv);
+    }  
+    firstDiv.innerHTML='<div style="Text-Align:center"> <canvas id=maincanvas></canvas> </div>';
+    var canvas = document.querySelector("#maincanvas");
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.backgroundColor="#efe";
+    var helper = new CanvasHelper(canvas);
 	}
 
 	function drawLine(x1,y1,x2,y2) { 
@@ -286,6 +286,7 @@ var Whio = (function(){
 	function drawPolygon(x,y,radius,number_of_sides,rotation_angle) { 
 		currentCanvasHelper.drawPolygon(x,y,radius,number_of_sides,rotation_angle); 
 	}
+
 	function drawStar(x,y,radius,ratio,number_of_sides,rotation_angle) { 
 		currentCanvasHelper.drawStar(x,y,radius,ratio,number_of_sides,rotation_angle); 
 	}
