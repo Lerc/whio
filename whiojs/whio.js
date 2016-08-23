@@ -1,3 +1,5 @@
+
+
 //Canvas extensions from MJS
 	CanvasRenderingContext2D.prototype.polygon = function (x,y,r,n,t){
 	 t=t ||0;	
@@ -106,6 +108,11 @@ var Whio = (function(){
 		}        
     }
     
+    function arrayPoints2d(points) {
+        if (Object.isArray(points[0])) return Object.clone(points);        
+        return points.map(function(point) {return [point.x,point.y];} )       
+    }
+    
 	var defaultCanvasHelper;
 	var currentCanvasHelper;
 
@@ -159,13 +166,13 @@ var Whio = (function(){
 	};
 
 	CanvasHelper.prototype.drawShape = function (x,y,points,s,t) {	
-		//this.ctx.shape(x,y,points,s,t);
-		//this.ctx.stroke();
+		this.ctx.shape(x,y,arrayPoints2d(points),s,t);
+		this.ctx.stroke();
 	};
 
 	CanvasHelper.prototype.fillShape = function (x,y,points,s,t) {
-		//this.ctx.shape(x,y,points,s,t);
-		//this.ctx.fill();
+		this.ctx.shape(x,y,arrayPoints2d(points),s,t);
+		this.ctx.fill();
 	};
 
 	CanvasHelper.prototype.drawPolygon = function (x,y,r,n,t) {	
@@ -942,4 +949,3 @@ this.length),b)+this},padRight:function(a,b){a=Ic(a);return this+Jc(S(0,a-this.l
 function(b,c){return J(a,c)?a[c]:b})}});H(s,!0,!0,{insert:s.prototype.add});
 (function(a){if(ba.btoa)Nc=ba.btoa,Oc=ba.atob;else{var b=/[^A-Za-z0-9\+\/\=]/g;Nc=function(b){var d="",e,g,f,h,l,n,x=0;do e=b.charCodeAt(x++),g=b.charCodeAt(x++),f=b.charCodeAt(x++),h=e>>2,e=(e&3)<<4|g>>4,l=(g&15)<<2|f>>6,n=f&63,isNaN(g)?l=n=64:isNaN(f)&&(n=64),d=d+a.charAt(h)+a.charAt(e)+a.charAt(l)+a.charAt(n);while(x<b.length);return d};Oc=function(c){var d="",e,g,f,h,l,n=0;if(c.match(b))throw Error("String contains invalid base64 characters");c=c.replace(/[^A-Za-z0-9\+\/\=]/g,"");do e=a.indexOf(c.charAt(n++)),
 g=a.indexOf(c.charAt(n++)),h=a.indexOf(c.charAt(n++)),l=a.indexOf(c.charAt(n++)),e=e<<2|g>>4,g=(g&15)<<4|h>>2,f=(h&3)<<6|l,d+=s.fromCharCode(e),64!=h&&(d+=s.fromCharCode(g)),64!=l&&(d+=s.fromCharCode(f));while(n<c.length);return d}}})("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=");})();
-

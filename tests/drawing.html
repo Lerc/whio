@@ -102,6 +102,20 @@
 
 			setColour("rgba(0,255,0,0.5)");			
 			fillStar(120,430,20,0.25,3);
+            
+            var arrayPoints = [[-30,10],[-20,10],[-10,40],[30,30],[40,30],[20,10]];
+            var objectPoints = [{x:-30,y:10}, {x:-20,y:10}, {x:-10,y:40} , {x:30, y:30}, {x:40,y:30}, {x:20,y:10}];
+            setColour("cyan");
+            drawShape(300,300,arrayPoints,1,0);
+            fillShape(400,300,arrayPoints,1,0);
+            setColour("black");
+            drawShape(400,300,arrayPoints,1,0);
+            
+            setColour("purple");
+            drawShape(300,400,objectPoints,1,0);
+            fillShape(400,400,objectPoints,1,0);
+            setColour("black");
+            drawShape(400,400,objectPoints,1,0);
 
 	</script>
 </body>
