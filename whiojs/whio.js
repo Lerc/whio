@@ -165,33 +165,33 @@ var Whio = (function(){
 		this.ctx.fill();
 	};
 
-	CanvasHelper.prototype.drawShape = function (x,y,points,s,t) {	
-		this.ctx.shape(x,y,arrayPoints2d(points),s,t);
+	CanvasHelper.prototype.drawShape = function (x,y,points,s=1,angle=0) {	
+		this.ctx.shape(x,y,arrayPoints2d(points),s,angle/180*Math.PI);
 		this.ctx.stroke();
 	};
 
-	CanvasHelper.prototype.fillShape = function (x,y,points,s,t) {
-		this.ctx.shape(x,y,arrayPoints2d(points),s,t);
+	CanvasHelper.prototype.fillShape = function (x,y,points,s=1,angle=0) {
+		this.ctx.shape(x,y,arrayPoints2d(points),s,angle/180*Math.PI);
 		this.ctx.fill();
 	};
 
-	CanvasHelper.prototype.drawPolygon = function (x,y,r,n,t) {	
-		this.ctx.polygon(x,y,r,n,t);
+	CanvasHelper.prototype.drawPolygon = function (x,y,r,n,angle=0) {	
+		this.ctx.polygon(x,y,r,n,angle/180*Math.PI);
 		this.ctx.stroke();
 	};
 
-	CanvasHelper.prototype.fillPolygon = function (x,y,r,n,t) {
-		this.ctx.polygon(x,y,r,n,t);
+	CanvasHelper.prototype.fillPolygon = function (x,y,r,n,angle=0) {
+		this.ctx.polygon(x,y,r,n,angle/180*Math.PI);
 		this.ctx.fill();
 	};
 
-  CanvasHelper.prototype.drawStar = function (x,y,r,ratio,n,t){ 
-		this.ctx.star(x,y,r,ratio,n,t);
+  CanvasHelper.prototype.drawStar = function (x,y,r,ratio,n,angle=0){ 
+		this.ctx.star(x,y,r,ratio,n,angle/180*Math.PI);
 		this.ctx.stroke();
 	};
 
-  CanvasHelper.prototype.fillStar = function (x,y,r,ratio,n,t){ 
-		this.ctx.star(x,y,r,ratio,n,t);
+  CanvasHelper.prototype.fillStar = function (x,y,r,ratio,n,angle=0){ 
+		this.ctx.star(x,y,r,ratio,n,angle/180*Math.PI);
 		this.ctx.fill();
 	};
 
