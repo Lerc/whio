@@ -575,6 +575,20 @@ var Whio = (function(){
 		return Math.sqrt(l2);
 	}
 
+	function degreesToDirection(angle) {
+		var radians = (angle-90)/ 180 * Math.PI;
+		var x=Math.cos(radians);
+		var y=Math.sin(radians);
+		return {x,y};
+	}
+
+	function directionToDegrees(direction) {
+		var radians=Math.atan2(direction.y,direction.x);
+		var angle = ((radians / Math.PI) +1) * 180 -90;
+		if (angle < 0) angle+=360;
+		return angle;
+	}
+
 	function rgb(red,green,blue,alpha) {
 			if (alpha === undefined) return ("rgb("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+")");
 			return ("rgba("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+","+alpha+")");
