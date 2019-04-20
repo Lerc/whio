@@ -483,6 +483,13 @@ li.CodeMirror-hint-active {
 	bottom: 0px;
 	background-color: beige;
 }
+.CodeMirror > .panel > .run {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	background-color: beige;
+}
 
 .CodeMirror > .panel >.button {
 	width: 18px;
@@ -490,6 +497,7 @@ li.CodeMirror-hint-active {
 	display: inline-block;
 	text-align: center;
 	box-shadow: inset -1px -1px 0px 0px black, inset 1px 1px 0px 0px white;
+  line-height: 19px;
 }
 .CodeMirror > .panel >.button:hover {
 	background-color: rgba(255,255,255,0.7);

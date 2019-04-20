@@ -46,7 +46,7 @@ function setupEditor(element) {
 		lineNumbers: true,
 		matchBrackets: true, 
 		foldGutter: true,
-		lint: { options: {undef:true,worker:true,funcscope:true, globals: whioGlobals } },
+		lint: { options: {undef:true,worker:true,funcscope:true, globals: whioGlobals,esversion:6 } },
 		gutters: ["CodeMirror-lint-markers","CodeMirror-linenumbers", "CodeMirror-foldgutter"],
 		extraKeys: {
       "F11": function(cm) {
@@ -74,12 +74,12 @@ function setupEditor(element) {
 		});
 		
 		
-		label = node.appendChild(document.createElement("span"));
-		label.textContent = "|";
+		//label = node.appendChild(document.createElement("span"));
+		//label.textContent = "|";
 		
 		var run=node.appendChild(document.createElement("a"));
 		run.setAttribute("title", "Run the code");
-		run.setAttribute("class", "button");
+		run.setAttribute("class", "run button");
 	  run.textContent="►";	
 		CodeMirror.on(run, "click", function() {
 			RunCodeBox(640,480,editor.getValue());

@@ -44,8 +44,19 @@ function drawImageData(x,y,w,h, imageBytes) {
 	postMessage(msg);
 }
 
+function printReplacer(key,value) {
+  function shortNumber(n) {
+    if (Math.abs(n)>1) return n.round(5);
+    return n;
+  }
+
+  if (typeof value === 'number') {
+    return shortNumber(value);
+  }
+  return value;
+}
 function print(text,x,y) {
-   if (Object.isObject(text)) text= JSON.stringify(text,null,"  ");       
+   if (typeof text !== "string")  text= JSON.stringify(text,printReplacer,"  ");       
    postFunctionCall("print",{"text":text,"x":x,"y":y});
 }
 
@@ -190,29 +201,6 @@ function drawPolygon() {
   postFunctionCall("drawPolygon",{"pointData":pointData});
 }
 
-function rgb(red,green,blue) {
-	return ("rgb("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+")");
-}
-
-function grey(shade) {
-	shade = Math.floor(shade);
-	return ("rgb("+shade+","+shade+","+shade+")");
-}
-
-function setRgb(red,green,blue) {
-	 setColour(rgb(red,green,blue));
-}
-
-function setGrey(shade) {
-	 setColour(grey(shade));
-}
-
-function distance(a,b) {
-  var dx=a.x-b.x;
-  var dy=a.y-b.y;
-  
-  return Math.sqrt(dx*dx+dy*dy);
-}
 function fillPolygon(pointData) {
   var pointData;
   if (arguments.length == 1) {
@@ -222,6 +210,39 @@ function fillPolygon(pointData) {
   }
   postFunctionCall("fillPolygon",{"pointData":pointData});
 }
+
+// these functions should be identical to the whio.js versions
+//FROMHERE
+function distance(a,b) {
+  var dx=a.x-b.x;
+  var dy=a.y-b.y;
+  var l2 = (dx*dx+dy*dy);
+  if (l2==0) return 0;
+  return Math.sqrt(l2);
+}
+
+function rgb(red,green,blue,alpha) {
+    if (alpha === undefined) return ("rgb("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+")");
+    return ("rgba("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+","+alpha+")");
+}
+
+function grey(shade,alpha) {
+	shade = Math.floor(shade);
+	return rgb(shade,shade,shade,alpha);
+}
+
+function setRgb(red,green,blue,alpha) {
+	 setColour(rgb(red,green,blue,alpha));
+}
+
+function setGrey(shade,alpha) {
+	 setColour(grey(shade,alpha));
+}
+
+var random=Math.random;
+var stringify=JSON.stringify;
+var setColor=setColour;
+//TOHERE
 
 var inputManager = (function () {
   var inputManager = {};

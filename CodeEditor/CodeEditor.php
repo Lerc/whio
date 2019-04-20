@@ -38,7 +38,7 @@ function renderCodeEditor( $paramstring, $params = array(), $parser){
     	$wgOut->addStyle( $path . 'editor/codemirror.css', 'screen');
     	$wgOut->addStyle( $path . 'editor/default.css', 'screen');
     	$wgOut->addScriptFile( $path . 'editor/codemirror-compressed.js');
-    	$wgOut->addScriptFile('//ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js');
+    	$wgOut->addScriptFile('https://cdnjs.cloudflare.com/ajax/libs/jshint/2.9.5/jshint.min.js');
     	$wgOut->addScriptFile( $path . 'editor/workerhost.js');
     	$wgOut->addScriptFile( $path . 'editor/hostapi.js');
     	$wgOut->addScriptFile( $path . 'editor/editor.js');

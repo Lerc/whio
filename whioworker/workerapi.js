@@ -44,8 +44,19 @@ function drawImageData(x,y,w,h, imageBytes) {
 	postMessage(msg);
 }
 
+function printReplacer(key,value) {
+  function shortNumber(n) {
+    if (Math.abs(n)>1) return n.round(5);
+    return n;
+  }
+
+  if (typeof value === 'number') {
+    return shortNumber(value);
+  }
+  return value;
+}
 function print(text,x,y) {
-   if (Object.isObject(text)) text= JSON.stringify(text,null,"  ");       
+   if (typeof text !== "string")  text= JSON.stringify(text,printReplacer,"  ");       
    postFunctionCall("print",{"text":text,"x":x,"y":y});
 }
 
