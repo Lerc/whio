@@ -271,84 +271,224 @@ var Whio = (function(){
     var helper = new CanvasHelper(canvas);
 	}
 
+	/**
+	 * Draw a line from the coordinates [x1,y1] to [x2,y2]
+	 * @param {number} x1 - start x
+	 * @param {number} y1 - start y
+	 * @param {number} x2 - end x
+	 * @param {number} y2 - end y
+	 */
 	function drawLine(x1,y1,x2,y2) { 
 		currentCanvasHelper.drawLine(x1,y1,x2,y2);
 	}
 
+	/**
+	 * Draw an unfilled circle 
+	 * @param {number} centerX 
+	 * @param {number} centerY 
+	 * @param {number} size - size as diameter. 
+	 */
 	function drawCircle(centerX,centerY,size) { 
 		currentCanvasHelper.drawCircle(centerX,centerY,size);
 	}
 
-	function drawRectangle(x,y,width,height,r) { 
+	/**
+	 * Draw an unfilled rectangle
+	 * @param {number} left - x position of left side 
+	 * @param {number} top - y position of top side
+	 * @param {number} width 
+	 * @param {number} height 
+	 * @param {number} [radius=0] - corner rounding
+	 */
+	function drawRectangle(x,y,width,height,r=0) { 
 		currentCanvasHelper.drawRectangle(x,y,width,height,r); 
 	}
 
-	function drawPolygon(x,y,radius,number_of_sides,rotation_angle) { 
+	/**
+	 * Draw an unfilled regular polygon
+	 * @param {number} centerX 
+	 * @param {number} centerY 
+	 * @param {number} radius 
+	 * @param {number} sides - number of sides 
+	 * @param {number} [angle = 0] angle of rotation
+	 */
+	function drawPolygon(x,y,radius,number_of_sides,rotation_angle=0) { 
 		currentCanvasHelper.drawPolygon(x,y,radius,number_of_sides,rotation_angle); 
 	}
 
+	/**
+	 * Draw an unfilled Star
+	 * @param {number} centerX 
+	 * @param {number} centerY 
+	 * @param {number} radius 
+	 * @param {number} ratio - difference between star peaks and valleys. (0.5 for normal star)
+	 * @param {number} number of points
+	 * @param {number} [angle=0] rotation angle 
+	 */
 	function drawStar(x,y,radius,ratio,number_of_sides,rotation_angle) { 
 		currentCanvasHelper.drawStar(x,y,radius,ratio,number_of_sides,rotation_angle); 
 	}
 
+	/**
+	 * Draw a filled circle
+	 * @param {number} centerX 
+	 * @param {number} centerY 
+	 * @param {number} size - size as diameter. 
+	 */
 	function fillCircle(centerX,centerY,size) { 
 		currentCanvasHelper.fillCircle(centerX,centerY,size); 
 	}
 
+	/**
+	 * Draw a filled rectangle 
+	 * @param {number} left - x position of left side 
+	 * @param {number} top - y position of top side
+	 * @param {number} width 
+	 * @param {number} height 
+	 * @param {number} [radius=0] - corner rounding
+	 */
 	function fillRectangle(x,y,width,height,r) {
 		currentCanvasHelper.fillRectangle(x,y,width,height,r);
 	}
 
+	/**
+	 * Draw a filled regular polygon
+	 * @param {number} centerX 
+	 * @param {number} centerY 
+	 * @param {number} radius 
+	 * @param {number} sides - number of sides 
+	 * @param {number} [angle = 0] -angle of rotation
+	 */
 	function fillPolygon(x,y,radius,number_of_sides,rotation_angle) { 
 		currentCanvasHelper.fillPolygon(x,y,radius,number_of_sides,rotation_angle); 
 	}
 
+	/**
+	 * Draw a filled Star
+	 * @param {number} centerX 
+	 * @param {number} centerY 
+	 * @param {number} radius 
+	 * @param {number} ratio - difference between star peaks and valleys. (0.5 for normal star)
+	 * @param {number} points - number of points
+	 * @param {number} [angle=0] - rotation angle 
+	 */
 	function fillStar(x,y,radius,ratio,number_of_sides,rotation_angle) { 
 		currentCanvasHelper.fillStar(x,y,radius,ratio,number_of_sides,rotation_angle); 
 	}
 
-	
+	/**
+	 * Draw text on the screen
+	 * @param {*} text - Text to draw.  Non-text values will be converted to text
+	 * @param {number} [x] - X position 
+	 * @param {number} [y] - Y position 
+	 */
 	function print(text,x,y) {
 		currentCanvasHelper.print(text,x,y);
 	}
 
+	/**
+	 * Draw an image
+	 * @param {*} image - Image to draw
+	 * @param {*} x 
+	 * @param {*} y 
+	 * @param {*} [frame] frame of animation
+	 * @param {*} [angle] rotation angle 
+	 */
 	function drawImage(image,x,y,frame,angle) { currentCanvasHelper.drawImage(image,x,y,frame,angle); }
+	/**
+	 * Clear the screen.
+	 */
 	function clear() { currentCanvasHelper.clear(); }
+	/**
+	 * Set the colour for the next drawing operation
+	 * @param {string} colour 
+	 */
 	function setColour(colour) { currentCanvasHelper.setColour(colour); }
+
+	/**
+	 * Store the current display and save it as a background.
+	 * this background will stay even after clear() commands
+	 */
 	function makeBackground() {currentCanvasHelper.makeBackground(); }
+
 
 	function drawImageRect(image,sourceLeft,sourceTop,sourceWidth,sourceHeight,destLeft,destTop,destWidth,destHeight) {
 		//unimplememnted yet
 	}
 
+	/**
+	 * Save the canvas state
+	 */
 	function canvasSave() {
 		currentCanvasHelper.ctx.save();
 	}
 
+	/**
+	 * Restore the most recently saved canvas state from the stack (and pop)
+	 */
 	function canvasRestore() {
 		currentCanvasHelper.ctx.restore();
 	}
 
+	/**
+	 * Set the canvas transformation matrix 
+	 * @param {number} a 
+	 * @param {number} b 
+	 * @param {number} c 
+	 * @param {number} d 
+	 * @param {number} e 
+	 * @param {number} f 
+	 */
 	function canvasTransform(a,b,c,d,e,f) {
 		currentCanvasHelper.ctx.transform(a,b,c,d,e,f);
 	}
 
+	/**
+	 * Move the canvas coordinate system
+	 * @param {number} x 
+	 * @param {number} y 
+	 */
 	function canvasTranslate(x,y) {
 		currentCanvasHelper.ctx.translate(x,y);
 	}
 
+	/**
+	 * Rotate the canvas coordinate system
+	 * @param {number} angle 
+	 */
 	function canvasRotate(angle) {
 		currentCanvasHelper.ctx.rotate(angle);
 	}
 
+	/**
+	 * Resize the canvas coordinate system
+	 * @param {number} scaleX 
+	 * @param {number} scaleY 
+	 */
 	function canvasScale(scaleX,scaleY) {
 		currentCanvasHelper.ctx.scale(scaleX,scaleY);
 	}
 
+	/**
+	 * Draw an unfilled shape from a list of points 
+	 * @param {number} x 
+	 * @param {number} y 
+	 * @param {{x:number,y:number}[] | Array.<Array>.number} points 
+	 * @param {number} scale 
+	 * @param {number} rotate 
+	 */
 	function drawShape(x,y,points,scale,rotate) {
 		currentCanvasHelper.drawShape(x,y,points,scale,rotate);
 	}
 
+	/**
+	 * Draw a filled shape from a list of points 
+	 * @param {number} x 
+	 * @param {number} y 
+	 * @param {{x:number,y:number}[] | Array.<Array>.number} points 
+	 * @param {number} scale 
+	 * @param {number} rotate 
+	 */
 	function fillShape(x,y,points,scale,rotate) {
 		currentCanvasHelper.fillShape(x,y,points,scale,rotate);
 	}
@@ -501,18 +641,34 @@ var Whio = (function(){
 		return result;
 	}
 
+	/**
+	 * Returns true if the specified key is currently being pressed down
+	 * @param {number} keycode 
+	 */
 	function keyIsDown(keycode) {
 		return run_input.keyIsDown(keycode);
 	}
 
+	/**
+	 * Returns true if the sprecified key has just been pressed
+	 * @param {number} keycode 
+	 */
 	function keyWentDown(keycode) {
 		return run_input.keyWentDown(keycode);
 	}
 
+	/**
+	 * Returns the mouse position and button status
+	 * @returns { {x:number:y:number, left:boolean,middle:boolean,right:boolean } }
+	 */
 	function getMouseInfo() {
 		return run_input.getMouseInfo();
 	}
 
+	/**
+	 * Returns the mouse position
+	 * @returns { {x:number:y:number} }
+	 */
 	function getMousePosition() {
 		return run_input.getMousePosition();
 	}
@@ -553,6 +709,16 @@ var Whio = (function(){
 	}
 
 
+	/**
+	 * Repeatedly call move and draw.  
+	 * Move will try to always run at the same speed.
+	 * If the computer is not fast enough to draw once for each move it will skip some draw calls to try and catch up.
+	 * Placing logic in move() and drawing in draw() enables the system to drop the framerate
+	 * while maintaining the same overall play speed.
+	 * @param {function} Move will be called at the specified framerate 
+	 * @param {function} [draw] Draw will be called as much as move unless there is lag.
+	 * @param {number} [framerate] 
+	 */
 	function run(move,draw,framerate) {
 		run_input = new InputManager();
 		console.log("running");
@@ -567,6 +733,11 @@ var Whio = (function(){
 	//end of std whio helper
 
 
+	/**
+	 * Returns the distance between two objects if they both have x and y parts.
+	 * @param {{x:number,y:number}} a 
+	 * @param {{x:number,y:number}} b 
+	 */
 	function distance(a,b) {
 		var dx=a.x-b.x;
 		var dy=a.y-b.y;
@@ -575,6 +746,11 @@ var Whio = (function(){
 		return Math.sqrt(l2);
 	}
 
+	/**
+	 * Returns a direction vector for the given angle
+	 * @param {number} angle - in degreees
+	 * @returns { {x:number, y:number} } 
+	 */
 	function degreesToDirection(angle) {
 		var radians = (angle-90)/ 180 * Math.PI;
 		var x=Math.cos(radians);
@@ -582,6 +758,11 @@ var Whio = (function(){
 		return {x,y};
 	}
 
+	/**
+	 * Converts a x,y value into an angle in degrees
+	 * @param { {x:number,y:number} } direction 
+	 * @returns {number} angle of direction
+	 */
 	function directionToDegrees(direction) {
 		var radians=Math.atan2(direction.y,direction.x);
 		var angle = ((radians / Math.PI) +1) * 180 -90;
@@ -589,20 +770,46 @@ var Whio = (function(){
 		return angle;
 	}
 
+	/**
+	 * Converts red,green, blue and alpha into a CSS colour string
+	 * @param {number} red 
+	 * @param {number} green 
+	 * @param {number} blue 
+	 * @param {number} alpha 
+	 * @returns {string} CSS Colour string
+	 */
 	function rgb(red,green,blue,alpha) {
 			if (alpha === undefined) return ("rgb("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+")");
 			return ("rgba("+Math.floor(red)+","+Math.floor(green)+","+Math.floor(blue)+","+alpha+")");
 	}
 
+	/**
+	 * Converts shade and alpha into a grey CSS colour string
+	 * @param {number} shade 
+	 * @param {number} alpha 
+	 * @returns {string} CSS Colour string
+	 */
 	function grey(shade,alpha) {
 		shade = Math.floor(shade);
 		return rgb(shade,shade,shade,alpha);
 	}
 
+	/**
+	 * Sets the drawing colour
+	 * @param {number} red 
+	 * @param {number} green 
+	 * @param {number} blue 
+	 * @param {number} alpha 
+	 */
 	function setRgb(red,green,blue,alpha) {
 		 setColour(rgb(red,green,blue,alpha));
 	}
 
+	/**
+	 * Sets the drawing colour to a shade of grey
+	 * @param {number} shade 
+	 * @param {number} alpha 
+	 */
 	function setGrey(shade,alpha) {
 		 setColour(grey(shade,alpha));
 	}
@@ -818,10 +1025,23 @@ var Whio = (function(){
 
 	SimplexNoise.default = new SimplexNoise(Math);
 
+	/**
+	 * Generates a 2d simplex noise sample
+	 * @param {number} x 
+	 * @param {number} y 
+	 * @returns {number} noise value at x,y
+	 */
 	function noise2d(x,y) {
 		return SimplexNoise.default.noise(x,y);
 	}
 
+	/**
+	 * Generates a 2d simplex noise sample
+	 * @param {number} x 
+	 * @param {number} y 
+	 * @param {number} z 
+	 * @returns {number} noise value at x,y,z
+	 */
 	function noise3d(x,y,z) {
 		return SimplexNoise.default.noise3d(x,y,z);
 	}	
@@ -834,7 +1054,7 @@ var Whio = (function(){
 		canvasSave,canvasRestore,canvasTransform,canvasTranslate,canvasRotate,canvasScale,
 		keyIsDown,keyWentDown,getMousePosition,getMouseInfo,
 		distance,rgb,grey,random,stringify,noise2d,noise3d,
-		run,makeCanvas,makeFullPageCanvas);
+		run,makeCanvas,makeFullPageCanvas,degreesToDirection,directionToDegrees);
 		
 	return API;
 })();
